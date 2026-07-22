@@ -29,7 +29,7 @@
   --border:rgba(0,0,0,0.08);--border-med:rgba(0,0,0,0.14);
   --text:#1c2b1a;--text2:#5a6b57;--text3:#9aaa96;
   --green:#2E7D32;--green-bg:#e8f5e9;--green-light:#f1f8f1;
-  --amber:#E65100;--amber-bg:#fff3e0;
+  --amber:#E65100;--amber-bg:#fff3e0;--amber-gold:#F9A825;
   --red:#c62828;--red-bg:#ffebee;
   --r:14px;--rs:8px;
 }
@@ -62,7 +62,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .meal-icon{font-size:18px}
 .meal-name{font-size:14px;font-weight:600}
 .meal-prot{font-size:13px;font-weight:600}
-.meal-prot.ok{color:var(--green)}.meal-prot.mid{color:var(--amber)}.meal-prot.low{color:var(--text3)}
+.meal-prot.ok{color:var(--green)}.meal-prot.mid{color:var(--amber-gold)}.meal-prot.low{color:var(--text3)}
 .meal-add-btn{width:28px;height:28px;border-radius:50%;background:var(--green-bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--green);font-size:18px;line-height:1;flex-shrink:0}
 .meal-entries{background:var(--card);border:0.5px solid var(--border);border-top:none;border-radius:0 0 var(--r) var(--r);overflow:hidden}
 .meal-entry{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:0.5px solid var(--border)}
@@ -707,7 +707,7 @@ function renderHoy(){
   var fill=document.getElementById('ring-fill');
   fill.style.strokeDasharray=circum;
   fill.style.strokeDashoffset=offset;
-  var col=total>=85?'#2E7D32':total>=50?'#E65100':'#c62828';
+  var col=total>=85?'#2E7D32':total>=50?'#F9A825':'#c62828';
   fill.style.stroke=col;
   document.getElementById('ring-value').textContent=total;
   document.getElementById('ring-value').style.color=col;
@@ -729,7 +729,7 @@ function renderHoy(){
   document.getElementById('distrib-rows').innerHTML=MEALS.map(function(m){
     var p=mealProt(m,entries);
     var barW=Math.min(100,Math.round(p/state.goal*100));
-    var barCol=p>=30?'var(--green)':p>=15?'var(--amber)':'var(--border)';
+    var barCol=p>=30?'var(--green)':p>=15?'var(--amber-gold)':'var(--border)';
     return'<div class="distrib-row"><div class="distrib-meal">'+MEAL_ICONS[m]+' '+m+'</div><div class="distrib-bar-wrap"><div class="distrib-bar-fill" style="width:'+barW+'%;background:'+barCol+'"></div></div><div class="distrib-val">'+p+'g</div></div>';
   }).join('');
   document.getElementById('meals-container').innerHTML=MEALS.map(function(meal){
@@ -766,7 +766,7 @@ function renderHistorial(){
       var dayEntries=state.entries.filter(function(e){return e.date===iso2;});
       var total=totalProt(dayEntries);
       var isToday=iso2===today;
-      var colDay=total>=state.goal?'var(--green)':total>=state.goal*.6?'var(--amber)':total>0?'var(--red)':'var(--text3)';
+      var colDay=total>=85?'var(--green)':total>=50?'var(--amber-gold)':total>0?'var(--red)':'var(--text3)';
       var bg=isToday?'var(--green-light)':'';
       var op=inRange?1:0.25;
       var click=inRange?'onclick="openHistEdit(event,\''+iso2+'\')"':'';
