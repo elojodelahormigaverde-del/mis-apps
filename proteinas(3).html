@@ -283,6 +283,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       </div>
       <select id="new-food-cat" style="width:100%;padding:9px 12px;border:1.5px solid var(--border-med);border-radius:var(--rs);font-size:14px;font-family:inherit;color:var(--text2);background:var(--card);margin-bottom:8px">
         <option value="Proteínas vegetales">Proteínas vegetales</option>
+        <option value="Semillas y frutos secos">Semillas y frutos secos</option>
         <option value="Pescado y carne">Pescado y carne</option>
         <option value="Lácteos">Lácteos</option>
         <option value="Cereales y pan">Cereales y pan</option>
@@ -386,8 +387,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <script>
 const FOODS=[
   {n:'Aguacate',cat:'Proteínas vegetales',p:2,portions:[{l:'100g',g:100},{l:'Media (80g)',g:80},{l:'Entera (160g)',g:160}]},
-  {n:'Almendras',cat:'Proteínas vegetales',p:21,portions:[{l:'Puñado (20g)',g:20},{l:'Porción (30g)',g:30},{l:'Doble (50g)',g:50}]},
-  {n:'Anacardos',cat:'Proteínas vegetales',p:18,portions:[{l:'Puñado (20g)',g:20},{l:'Porción (30g)',g:30},{l:'Doble (50g)',g:50}]},
+  {n:'Almendras',cat:'Semillas y frutos secos',p:21,portions:[{l:'Puñado (20g)',g:20},{l:'Porción (30g)',g:30},{l:'Doble (50g)',g:50}]},
+  {n:'Anacardos',cat:'Semillas y frutos secos',p:18,portions:[{l:'Puñado (20g)',g:20},{l:'Porción (30g)',g:30},{l:'Doble (50g)',g:50}]},
   {n:'Arroz integral cocido',cat:'Cereales y pan',p:3,portions:[{l:'Pequeña (100g)',g:100},{l:'Media (150g)',g:150},{l:'Grande (200g)',g:200}]},
   {n:'Atún al natural (lata)',cat:'Pescado y carne',p:24,portions:[{l:'Media lata (60g)',g:60},{l:'Lata entera (120g)',g:120},{l:'Lata grande (180g)',g:180}]},
   {n:'Atún fresco',cat:'Pescado y carne',p:23,portions:[{l:'Pequeña (120g)',g:120},{l:'Media (150g)',g:150},{l:'Grande (200g)',g:200}]},
@@ -396,11 +397,11 @@ const FOODS=[
   {n:'Boquerones frescos',cat:'Pescado y carne',p:20,portions:[{l:'Pequeña (80g)',g:80},{l:'Media (100g)',g:100},{l:'Grande (150g)',g:150}]},
   {n:'Caballa en lata',cat:'Pescado y carne',p:20,portions:[{l:'Media lata (80g)',g:80},{l:'Lata (100g)',g:100},{l:'Lata grande (150g)',g:150}]},
   {n:'Caballa fresca',cat:'Pescado y carne',p:19,portions:[{l:'Pequeña (120g)',g:120},{l:'Media (150g)',g:150},{l:'Grande (200g)',g:200}]},
-  {n:'Cacahuetes',cat:'Proteínas vegetales',p:26,portions:[{l:'Puñado (20g)',g:20},{l:'Porción (30g)',g:30},{l:'Doble (50g)',g:50}]},
+  {n:'Cacahuetes',cat:'Semillas y frutos secos',p:26,portions:[{l:'Puñado (20g)',g:20},{l:'Porción (30g)',g:30},{l:'Doble (50g)',g:50}]},
   {n:'Champiñones',cat:'Proteínas vegetales',p:3,portions:[{l:'Pequeña (80g)',g:80},{l:'Media (120g)',g:120},{l:'Grande (200g)',g:200}]},
   {n:'Clara de huevo',cat:'Lácteos',p:11,portions:[{l:'2 claras (60g)',g:60},{l:'3 claras (90g)',g:90},{l:'4 claras (120g)',g:120}]},
   {n:'Cottage cheese',cat:'Lácteos',p:13,portions:[{l:'Pequeña (100g)',g:100},{l:'Media (150g)',g:150},{l:'Grande (200g)',g:200}]},
-  {n:'Crema de cacahuete',cat:'Proteínas vegetales',p:25,portions:[{l:'1 cda (16g)',g:16},{l:'2 cdas (32g)',g:32},{l:'3 cdas (48g)',g:48}]},
+  {n:'Crema de cacahuete',cat:'Semillas y frutos secos',p:25,portions:[{l:'1 cda (16g)',g:16},{l:'2 cdas (32g)',g:32},{l:'3 cdas (48g)',g:48}]},
   {n:'Dorada / lubina',cat:'Pescado y carne',p:20,portions:[{l:'Pequeña (120g)',g:120},{l:'Media (150g)',g:150},{l:'Grande (200g)',g:200}]},
   {n:'Edamame cocido',cat:'Proteínas vegetales',p:11,portions:[{l:'Pequeña (100g)',g:100},{l:'Media (150g)',g:150},{l:'Grande (200g)',g:200}]},
   {n:'Espinacas cocidas',cat:'Proteínas vegetales',p:3,portions:[{l:'Pequeña (80g)',g:80},{l:'Media (150g)',g:150},{l:'Grande (250g)',g:250}]},
@@ -416,13 +417,13 @@ const FOODS=[
   {n:'Mozzarella búfala',cat:'Lácteos',p:18,portions:[{l:'Pequeña (80g)',g:80},{l:'Media (100g)',g:100},{l:'Grande (125g)',g:125}]},
   {n:'Muslo de pollo sin piel',cat:'Pescado y carne',p:19,portions:[{l:'Pequeña (120g)',g:120},{l:'Media (150g)',g:150},{l:'Grande (200g)',g:200}]},
   {n:'Natto',cat:'Proteínas vegetales',p:18,portions:[{l:'Pequeña (80g)',g:80},{l:'Media (100g)',g:100},{l:'Grande (150g)',g:150}]},
-  {n:'Nueces',cat:'Proteínas vegetales',p:15,portions:[{l:'Puñado (20g)',g:20},{l:'Porción (30g)',g:30},{l:'Doble (50g)',g:50}]},
+  {n:'Nueces',cat:'Semillas y frutos secos',p:15,portions:[{l:'Puñado (20g)',g:20},{l:'Porción (30g)',g:30},{l:'Doble (50g)',g:50}]},
   {n:'Pan de espelta',cat:'Cereales y pan',p:8,portions:[{l:'1 rebanada (40g)',g:40},{l:'2 rebanadas (80g)',g:80},{l:'3 rebanadas (120g)',g:120}]},
   {n:'Pan de trigo integral',cat:'Cereales y pan',p:9,portions:[{l:'1 rebanada (40g)',g:40},{l:'2 rebanadas (80g)',g:80},{l:'3 rebanadas (120g)',g:120}]},
   {n:'Pasta de trigo cocida',cat:'Cereales y pan',p:4,portions:[{l:'Pequeña (100g)',g:100},{l:'Media (150g)',g:150},{l:'Grande (200g)',g:200}]},
   {n:'Pasta espelta cocida',cat:'Cereales y pan',p:5,portions:[{l:'Pequeña (100g)',g:100},{l:'Media (150g)',g:150},{l:'Grande (200g)',g:200}]},
   {n:'Pechuga de pollo',cat:'Pescado y carne',p:23,portions:[{l:'Pequeña (120g)',g:120},{l:'Media (150g)',g:150},{l:'Grande (200g)',g:200}]},
-  {n:'Pistachos',cat:'Proteínas vegetales',p:20,portions:[{l:'Puñado (20g)',g:20},{l:'Porción (30g)',g:30},{l:'Doble (50g)',g:50}]},
+  {n:'Pistachos',cat:'Semillas y frutos secos',p:20,portions:[{l:'Puñado (20g)',g:20},{l:'Porción (30g)',g:30},{l:'Doble (50g)',g:50}]},
   {n:'Queso de cabra rulo',cat:'Lácteos',p:19,portions:[{l:'Pequeña (30g)',g:30},{l:'Media (50g)',g:50},{l:'Grande (80g)',g:80}]},
   {n:'Queso feta',cat:'Lácteos',p:14,portions:[{l:'Pequeña (30g)',g:30},{l:'Media (50g)',g:50},{l:'Grande (80g)',g:80}]},
   {n:'Queso parmesano',cat:'Lácteos',p:36,portions:[{l:'Rallado (15g)',g:15},{l:'Porción (20g)',g:20},{l:'Doble (40g)',g:40}]},
@@ -431,17 +432,31 @@ const FOODS=[
   {n:'Salmón ahumado',cat:'Pescado y carne',p:22,portions:[{l:'Pequeña (60g)',g:60},{l:'Media (100g)',g:100},{l:'Grande (150g)',g:150}]},
   {n:'Salmón fresco',cat:'Pescado y carne',p:20,portions:[{l:'Pequeña (120g)',g:120},{l:'Media (150g)',g:150},{l:'Grande (200g)',g:200}]},
   {n:'Sardinas en lata',cat:'Pescado y carne',p:22,portions:[{l:'Media lata (60g)',g:60},{l:'Lata (100g)',g:100},{l:'Lata grande (150g)',g:150}]},
-  {n:'Semillas de calabaza',cat:'Proteínas vegetales',p:30,portions:[{l:'Pequeña (20g)',g:20},{l:'Porción (30g)',g:30},{l:'Grande (50g)',g:50}]},
-  {n:'Semillas de chía',cat:'Proteínas vegetales',p:17,portions:[{l:'1 cda (15g)',g:15},{l:'2 cdas (30g)',g:30},{l:'3 cdas (45g)',g:45}]},
-  {n:'Semillas de cáñamo',cat:'Proteínas vegetales',p:32,portions:[{l:'1 cda (15g)',g:15},{l:'2 cdas (30g)',g:30},{l:'3 cdas (45g)',g:45}]},
-  {n:'Semillas de girasol',cat:'Proteínas vegetales',p:21,portions:[{l:'Pequeña (20g)',g:20},{l:'Porción (30g)',g:30},{l:'Grande (50g)',g:50}]},
+  {n:'Semillas de calabaza',cat:'Semillas y frutos secos',p:30,portions:[{l:'Pequeña (20g)',g:20},{l:'Porción (30g)',g:30},{l:'Grande (50g)',g:50}]},
+  {n:'Semillas de chía',cat:'Semillas y frutos secos',p:17,portions:[{l:'1 cda (15g)',g:15},{l:'2 cdas (30g)',g:30},{l:'3 cdas (45g)',g:45}]},
+  {n:'Semillas de cáñamo',cat:'Semillas y frutos secos',p:32,portions:[{l:'1 cda (15g)',g:15},{l:'2 cdas (30g)',g:30},{l:'3 cdas (45g)',g:45}]},
+  {n:'Semillas de girasol',cat:'Semillas y frutos secos',p:21,portions:[{l:'Pequeña (20g)',g:20},{l:'Porción (30g)',g:30},{l:'Grande (50g)',g:50}]},
   {n:'Skyr natural',cat:'Lácteos',p:11,portions:[{l:'Pequeña (150g)',g:150},{l:'Media (200g)',g:200},{l:'Grande (250g)',g:250}]},
   {n:'Tempeh',cat:'Proteínas vegetales',p:19,portions:[{l:'Pequeña (80g)',g:80},{l:'Media (150g)',g:150},{l:'Grande (200g)',g:200}]},
   {n:'Tofu firme',cat:'Proteínas vegetales',p:9,portions:[{l:'Pequeña (100g)',g:100},{l:'Media (150g)',g:150},{l:'Grande (200g)',g:200}]},
   {n:'Trucha',cat:'Pescado y carne',p:20,portions:[{l:'Pequeña (120g)',g:120},{l:'Media (150g)',g:150},{l:'Grande (200g)',g:200}]},
   {n:'Yogur de cabra natural',cat:'Lácteos',p:4,portions:[{l:'Pequeña (150g)',g:150},{l:'Media (200g)',g:200},{l:'Grande (250g)',g:250}]},
   {n:'Yogur de soja sin azúcar',cat:'Lácteos',p:4,portions:[{l:'Pequeña (150g)',g:150},{l:'Media (200g)',g:200},{l:'Grande (250g)',g:250}]},
-  {n:'Yogur de vaca natural',cat:'Lácteos',p:4,portions:[{l:'Pequeña (150g)',g:150},{l:'Media (200g)',g:200},{l:'Grande (250g)',g:250}]}
+  {n:'Yogur de vaca natural',cat:'Lácteos',p:4,portions:[{l:'Pequeña (150g)',g:150},{l:'Media (200g)',g:200},{l:'Grande (250g)',g:250}]},
+  {n:'Boletus / porcini frescos',cat:'Proteínas vegetales',p:4,portions:[{l:'Pequeña (100g)',g:100},{l:'Media (150g)',g:150},{l:'Grande (200g)',g:200}]},
+  {n:'Champiñón blanco',cat:'Proteínas vegetales',p:3,portions:[{l:'Pequeña (100g)',g:100},{l:'Media (150g)',g:150},{l:'Grande (200g)',g:200}]},
+  {n:'Champiñón Portobello',cat:'Proteínas vegetales',p:4,portions:[{l:'Pequeña (100g)',g:100},{l:'Media (150g)',g:150},{l:'Grande (200g)',g:200}]},
+  {n:'Pleurotus / seta de ostra',cat:'Proteínas vegetales',p:3,portions:[{l:'Pequeña (100g)',g:100},{l:'Media (150g)',g:150},{l:'Grande (200g)',g:200}]},
+  {n:'Shiitake',cat:'Proteínas vegetales',p:2,portions:[{l:'Pequeña (80g)',g:80},{l:'Media (100g)',g:100},{l:'Grande (150g)',g:150}]},
+  {n:'Semillas de lino molidas',cat:'Semillas y frutos secos',p:18,portions:[{l:'1 cda (15g)',g:15},{l:'2 cdas (30g)',g:30},{l:'3 cdas (45g)',g:45}]},
+  {n:'Sésamo molido / gomasio',cat:'Semillas y frutos secos',p:18,portions:[{l:'1 cda (15g)',g:15},{l:'2 cdas (30g)',g:30},{l:'3 cdas (45g)',g:45}]},
+  {n:'Brócoli cocido',cat:'Proteínas vegetales',p:3,portions:[{l:'Pequeña (100g)',g:100},{l:'Media (200g)',g:200},{l:'Grande (300g)',g:300}]},
+  {n:'Guisantes congelados',cat:'Proteínas vegetales',p:5,portions:[{l:'Pequeña (100g)',g:100},{l:'Media (150g)',g:150},{l:'Grande (200g)',g:200}]},
+  {n:'Habas frescas',cat:'Proteínas vegetales',p:8,portions:[{l:'Pequeña (100g)',g:100},{l:'Media (150g)',g:150},{l:'Grande (200g)',g:200}]},
+  {n:'Tofu sedoso',cat:'Proteínas vegetales',p:5,portions:[{l:'Pequeña (100g)',g:100},{l:'Media (150g)',g:150},{l:'Grande (200g)',g:200}]},
+  {n:'Levadura nutricional',cat:'Proteínas vegetales',p:45,portions:[{l:'1 cda (15g)',g:15},{l:'2 cdas (30g)',g:30},{l:'3 cdas (45g)',g:45}]},
+  {n:'Tahini',cat:'Proteínas vegetales',p:17,portions:[{l:'1 cda (15g)',g:15},{l:'2 cdas (30g)',g:30},{l:'3 cdas (45g)',g:45}]},
+  {n:'Miso',cat:'Proteínas vegetales',p:12,portions:[{l:'1 cda (15g)',g:15},{l:'2 cdas (30g)',g:30},{l:'3 cdas (45g)',g:45}]}
 ];
 
 const COMBINACIONES=[
@@ -468,7 +483,7 @@ const COMBINACIONES=[
 
 const MEALS=['Desayuno','Comida','Cena','Snack'];
 const MEAL_ICONS={Desayuno:'☀️',Comida:'🥗',Cena:'🌙',Snack:'🍎'};
-const CATS=['Todas','Proteínas vegetales','Pescado y carne','Lácteos','Cereales y pan'];
+const CATS=['Todas','Proteínas vegetales','Semillas y frutos secos','Pescado y carne','Lácteos','Cereales y pan'];
 const COMB_CATS=['Todas','Desayuno','Comida','Cena','Post-entreno'];
 
 function r1(v){return Math.round(v*10)/10;}
@@ -692,7 +707,7 @@ function renderHoy(){
   var fill=document.getElementById('ring-fill');
   fill.style.strokeDasharray=circum;
   fill.style.strokeDashoffset=offset;
-  var col=pct>=90?'#2E7D32':pct>=60?'#E65100':'#c62828';
+  var col=total>=85?'#2E7D32':total>=50?'#E65100':'#c62828';
   fill.style.stroke=col;
   document.getElementById('ring-value').textContent=total;
   document.getElementById('ring-value').style.color=col;
