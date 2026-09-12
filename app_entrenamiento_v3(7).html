@@ -33,6 +33,7 @@
   --movilidad-bg:#E1F5EE;--movilidad-text:#085041;
   --cardio-bg:#FAEEDA;--cardio-text:#633806;
   --funcional-bg:#EEEDFE;--funcional-text:#3C3489;
+  --fisio-bg:#E0F2F1;--fisio-text:#00695C;
   --green:#3B6D11;--green-bg:#EAF3DE;
   --amber:#854F0B;--amber-bg:#FAEEDA;
   --red:#A32D2D;--red-bg:#FCEBEB;
@@ -57,6 +58,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tag-movilidad{background:var(--movilidad-bg);color:var(--movilidad-text)}
 .tag-cardio{background:var(--cardio-bg);color:var(--cardio-text)}
 .tag-funcional{background:var(--funcional-bg);color:var(--funcional-text)}
+.tag-fisio{background:var(--fisio-bg);color:var(--fisio-text)}
 .alert{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;border-radius:var(--rs);font-size:13px;line-height:1.5}
 .alert svg{width:16px;height:16px;flex-shrink:0;margin-top:1px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .alert-warn{background:var(--amber-bg);color:var(--amber)}
@@ -202,6 +204,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .modal-chip.cat-movilidad.selected{background:var(--movilidad-bg);color:var(--movilidad-text);border-color:var(--movilidad-text);font-weight:600}
 .modal-chip.cat-cardio.selected{background:var(--cardio-bg);color:var(--cardio-text);border-color:var(--cardio-text);font-weight:600}
 .modal-chip.cat-funcional.selected{background:var(--funcional-bg);color:var(--funcional-text);border-color:var(--funcional-text);font-weight:600}
+.modal-chip.cat-fisio.selected{background:var(--fisio-bg);color:var(--fisio-text);border-color:var(--fisio-text);font-weight:600}
 .modal-other-row{display:flex;gap:8px;align-items:center;margin-top:8px}
 .modal-other-input{flex:1;padding:10px 12px;border:0.5px solid var(--border-med);border-radius:var(--rs);font-size:14px;color:var(--text);background:var(--card);font-family:inherit}
 .modal-other-input:focus{outline:none;border-color:var(--blue)}
@@ -252,27 +255,42 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="session-cards">
     <div class="session-card" onclick="openSession('sup')">
       <div class="session-icon" style="background:#E6F1FB;color:#0C447C"><svg viewBox="0 0 24 24"><path d="M6 4v16M18 4v16M6 12h12M3 6h3M18 6h3M3 18h3M18 18h3"/></svg></div>
-      <div class="session-info"><div class="session-name">Gimnasio · Tren superior</div><div class="session-meta">7 ejercicios · 40-45 min</div></div>
+      <div class="session-info"><div class="session-name">Gym · Tren superior</div><div class="session-meta">9-10 ejercicios · ~55 min</div></div>
       <div class="session-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
     </div>
     <div class="session-card" onclick="openSession('inf')">
       <div class="session-icon" style="background:#E1F5EE;color:#085041"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 017 7c0 5-7 13-7 13S5 14 5 9a7 7 0 017-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
-      <div class="session-info"><div class="session-name">Gimnasio · Tren inferior</div><div class="session-meta">7 ejercicios · 40-45 min</div></div>
+      <div class="session-info"><div class="session-name">Gym · Tren inferior</div><div class="session-meta">7 ejercicios · ~47 min</div></div>
       <div class="session-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
     </div>
-    <div class="session-card" onclick="openSession('cal_casa')">
-    <div class="session-emoji">🤸</div>
-    <div class="session-info"><div class="session-title">Casa · Calistenia</div><div class="session-meta">10 ejercicios · 40-50 min</div></div>
-    <div class="session-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
-  </div>
-  <div class="session-card" onclick="openSession('cal_gym')">
-    <div class="session-emoji">🏋️</div>
-    <div class="session-info"><div class="session-title">Gimnasio · Calistenia</div><div class="session-meta">11 ejercicios · 45-55 min</div></div>
-    <div class="session-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
-  </div>
-  <div class="session-card" onclick="openSession('casa')">
+    <div class="session-card" onclick="openSession('full')">
+      <div class="session-icon" style="background:#EDE7F6;color:#4527A0"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><path d="M12 7v7M8 10l4-1 4 1M9 21l3-7 3 7"/></svg></div>
+      <div class="session-info"><div class="session-name">Gym · Full body</div><div class="session-meta">8 ejercicios · ~49 min</div></div>
+      <div class="session-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+    <div class="session-card" onclick="openSession('espalda')">
+      <div class="session-icon" style="background:#E6F1FB;color:#0C447C"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 01-12 0M6 8V6a6 6 0 0112 0v2M4 8h16l-1 12H5z"/></svg></div>
+      <div class="session-info"><div class="session-name">Gym · Espalda y bíceps</div><div class="session-meta">6 ejercicios · ~40 min</div></div>
+      <div class="session-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+    <div class="session-card" onclick="openSession('pecho')">
+      <div class="session-icon" style="background:#FBE9E7;color:#BF360C"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+      <div class="session-info"><div class="session-name">Gym · Pecho y tríceps</div><div class="session-meta">6-8 ejercicios · ~40 min</div></div>
+      <div class="session-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+    <div class="session-card" onclick="openSession('casa_sup')">
       <div class="session-icon" style="background:#FAEEDA;color:#633806"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
-      <div class="session-info"><div class="session-name">Casa · Brazos y espalda</div><div class="session-meta">14 ejercicios · 50-55 min</div></div>
+      <div class="session-info"><div class="session-name">Casa · Focus superior</div><div class="session-meta">9 ejercicios · ~54 min</div></div>
+      <div class="session-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+    <div class="session-card" onclick="openSession('casa_abs')">
+      <div class="session-icon" style="background:#FAEEDA;color:#633806"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+      <div class="session-info"><div class="session-name">Casa · Focus abdominales</div><div class="session-meta">6 ejercicios · ~37 min</div></div>
+      <div class="session-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+    <div class="session-card" onclick="openSession('fisio')">
+      <div class="session-icon" style="background:#E0F2F1;color:#00695C"><svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M7 7l10 10M17 7L7 17"/></svg></div>
+      <div class="session-info"><div class="session-name">Fisio · Cuello y rodilla</div><div class="session-meta">5 ejercicios · ~20 min</div></div>
       <div class="session-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
     </div>
   </div>
@@ -553,9 +571,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
     <div class="modal-section-label">Fuerza</div>
     <div class="modal-chips">
-      <div class="modal-chip cat-fuerza" onclick="selectChip(this,'Fuerza tren superior','fuerza')">Fuerza tren sup.</div>
-      <div class="modal-chip cat-fuerza" onclick="selectChip(this,'Fuerza tren inferior','fuerza')">Fuerza tren inf.</div>
-      <div class="modal-chip cat-fuerza" onclick="selectChip(this,'Fuerza en casa','fuerza')">Fuerza en casa</div>
+      <div class="modal-chip cat-fuerza" onclick="selectChip(this,'Fuerza tren superior','fuerza')">Tren sup.</div>
+      <div class="modal-chip cat-fuerza" onclick="selectChip(this,'Fuerza tren inferior','fuerza')">Tren inf.</div>
+      <div class="modal-chip cat-fuerza" onclick="selectChip(this,'Full body','fuerza')">Full body</div>
+      <div class="modal-chip cat-fuerza" onclick="selectChip(this,'Espalda, bíceps y antebrazo','fuerza')">Espalda/bíceps</div>
+      <div class="modal-chip cat-fuerza" onclick="selectChip(this,'Pecho, hombro y tríceps','fuerza')">Pecho/tríceps</div>
+      <div class="modal-chip cat-fuerza" onclick="selectChip(this,'Full body casa (superior)','fuerza')">Casa superior</div>
+      <div class="modal-chip cat-fuerza" onclick="selectChip(this,'Full body casa (abs)','fuerza')">Casa abs</div>
     </div>
     <div class="modal-section-label">Cardio</div>
     <div class="modal-chips">
@@ -567,6 +589,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="modal-chip cat-funcional" onclick="selectChip(this,'Pilates','funcional')">Pilates</div>
       <div class="modal-chip cat-funcional" onclick="selectChip(this,'Power Vinyasa','funcional')">Power Vinyasa</div>
     </div>
+    <div class="modal-section-label">Fisio</div>
+    <div class="modal-chips">
+      <div class="modal-chip cat-fisio" onclick="selectChip(this,'Fisio','fisio')">Fisio cuello/rodilla</div>
+    </div>
     <div class="modal-section-label">Otra actividad</div>
     <div class="modal-other-row">
       <input type="text" class="modal-other-input" id="modal-other-text" placeholder="Escribe una actividad..." oninput="onOtherInput()">
@@ -575,6 +601,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <option value="fuerza">Fuerza</option>
         <option value="cardio">Cardio</option>
         <option value="funcional">Funcional</option>
+        <option value="fisio">Fisio</option>
       </select>
     </div>
     <div class="modal-actions">
@@ -607,11 +634,14 @@ function localDateISO(d){
 
 // ============ SESSIONS DATA ============
 const SESSIONS={
-  sup:{id:'sup',title:'Gimnasio · Tren superior',meta:'10 ejercicios · 55-60 min',activityName:'Fuerza tren superior',activityCat:'fuerza',alert:'Ejercicios del fisio antes de empezar · Calentamiento 5 min en bici estática',coreExercises:['A1','A2','B1','C1','C2'],blocks:[{label:'Bloque A — Espalda',exercises:['A1','A2','A3']},{label:'Bloque B — Bíceps',exercises:['B1','B2']},{label:'Bloque C — Pecho y hombros',exercises:['C1','C2','C3','C4']},{label:'Bloque D — Tríceps',exercises:['D1']}]},
-  inf:{id:'inf',title:'Gimnasio · Tren inferior',meta:'7 ejercicios · 40-45 min',activityName:'Fuerza tren inferior',activityCat:'fuerza',alert:'Calentamiento: si vienes en bici, 5 rotaciones cadera + 10 mini sentadillas · Si no, 5 min elíptica',coreExercises:['I_A1','I_A2','I_C1'],blocks:[{label:'Bloque A — Glúteos',exercises:['I_A1','I_A2']},{label:'Bloque B — Cuádriceps',exercises:['I_B1','I_B2']},{label:'Bloque C — Isquiotibiales',exercises:['I_C1','I_C2']},{label:'Bloque D — Equilibrio',exercises:['I_D1']}]},
-  cal_casa:{id:'cal_casa',title:'Casa · Calistenia',meta:'10 ejercicios · 40-50 min',activityName:'Calistenia en casa',activityCat:'fuerza',alert:'Calienta 5 min (hombros y muñecas) · Esterilla y banda elástica a mano · Los ejercicios 🔁 conviene practicarlos también otros días, siempre a intensidad moderada',coreExercises:['CAL_PUSH','CH_DIPS','CH_PULL','CAL_LSIT'],blocks:[{label:'Bloque A — Empuje y tirón',exercises:['CAL_PUSH','CH_DIPS','CH_PULL']},{label:'Bloque B — Core',exercises:['CAL_COMP','CAL_HOLLOW','C_D1']},{label:'Bloque C — Figuras de equilibrio',exercises:['CAL_FROG','CAL_HSHAPE','CAL_WALL','CAL_LSIT']}]},
-  cal_gym:{id:'cal_gym',title:'Gimnasio · Calistenia',meta:'11 ejercicios · 45-55 min',activityName:'Calistenia en gimnasio',activityCat:'fuerza',alert:'Calienta 5 min · Usa las máquinas asistidas de fondos/dominadas · Esterilla para las figuras · Los ejercicios 🔁 conviene practicarlos también otros días, siempre a intensidad moderada',coreExercises:['CAL_PUSH','CG_PULL','CG_DIPS','CAL_LSIT'],blocks:[{label:'Bloque A — Empuje y tirón',exercises:['CAL_PUSH','CG_DIPS','CG_PULL']},{label:'Bloque B — Core',exercises:['CG_CORE','CAL_COMP','CG_PALLOF','CAL_HOLLOW']},{label:'Bloque C — Figuras de equilibrio',exercises:['CAL_FROG','CAL_HSHAPE','CAL_WALL','CAL_LSIT']}]},
-  casa:{id:'casa',title:'Casa · Brazos y espalda',meta:'14 ejercicios · 50-55 min',activityName:'Fuerza en casa',activityCat:'fuerza',alert:'Ejercicios del fisio SIEMPRE antes de empezar · Calentamiento 5 min sin tocar el suelo',coreExercises:['C_B1','C_B2','C_C1','C_C2','C_D1','C_D2'],blocks:[{label:'Bloque A — Bíceps',exercises:['C_A1','C_A2']},{label:'Bloque B — Tríceps',exercises:['C_B1','C_B2','C_B3']},{label:'Bloque C — Espalda',exercises:['C_C1','C_C2','C_C3']},{label:'Bloque D — Core',exercises:['C_D1','C_D2']},{label:'Bloque E — Rodilla',exercises:['C_E1','C_E2','C_E3','C_E4']}]}
+  sup:{id:'sup',title:'Gym · Tren superior',meta:'9-10 ejercicios · ~55 min',activityName:'Fuerza tren superior',activityCat:'fuerza',alert:'Ejercicios del fisio antes de empezar · Calentamiento 5 min en bici estática',coreExercises:['A1','A2','B1','C1','C2'],blocks:[{label:'Bloque A — Espalda',exercises:['A1','A2','A3']},{label:'Bloque B — Bíceps',exercises:['B1']},{label:'Bloque C — Pecho y hombros',exercises:['C1','C2','C3','C4']},{label:'Bloque D — Tríceps',exercises:['D1','D2']}]},
+  inf:{id:'inf',title:'Gym · Tren inferior',meta:'7 ejercicios · ~47 min',activityName:'Fuerza tren inferior',activityCat:'fuerza',alert:'Calentamiento: si vienes en bici, 5 rotaciones cadera + 10 mini sentadillas · Si no, 5 min elíptica',coreExercises:['I_A1','I_A2','I_C1'],blocks:[{label:'Bloque A — Glúteos',exercises:['I_A1','I_A2']},{label:'Bloque B — Cuádriceps',exercises:['I_B1','I_B2']},{label:'Bloque C — Isquiotibiales',exercises:['I_C1','I_C2']},{label:'Bloque D — Equilibrio',exercises:['I_D1']}]},
+  full:{id:'full',title:'Gym · Full body',meta:'8 ejercicios · ~49 min',activityName:'Full body',activityCat:'fuerza',alert:'Ejercicios del fisio antes de empezar · Calentamiento 5 min · Sesión completa con abdominales',coreExercises:['C1','A2','I_B1','I_A2'],blocks:[{label:'Bloque A — Torso',exercises:['C1','A2']},{label:'Bloque B — Pierna',exercises:['I_B1','I_A2']},{label:'Bloque C — Hombro',exercises:['C4']},{label:'Bloque D — Core',exercises:['CG_CORE','CG_PALLOF','CAL_HOLLOW']}]},
+  espalda:{id:'espalda',title:'Gym · Espalda y bíceps',meta:'6 ejercicios · ~40 min',activityName:'Espalda, bíceps y antebrazo',activityCat:'fuerza',alert:'Ejercicios del fisio antes de empezar · Variante: sustituye A1 por dominadas en máquina asistida cada 3-4 semanas',coreExercises:['A1','A2','B1'],blocks:[{label:'Bloque A — Espalda',exercises:['A1','A2','A3']},{label:'Bloque B — Bíceps y antebrazo',exercises:['B1','B3','B4']}]},
+  pecho:{id:'pecho',title:'Gym · Pecho y tríceps',meta:'6-8 ejercicios · ~40 min',activityName:'Pecho, hombro y tríceps',activityCat:'fuerza',alert:'Ejercicios del fisio antes de empezar · Variante: sustituye C1 por fondos en máquina asistida cada 3-4 semanas',coreExercises:['C1','C3','C2'],blocks:[{label:'Bloque A — Pecho y hombro',exercises:['C1','C3','C2','C4']},{label:'Bloque B — Tríceps',exercises:['D1','D2']},{label:'Bloque C — Equilibrio (opcional)',exercises:['CAL_FROG','CAL_WALL']}]},
+  casa_sup:{id:'casa_sup',title:'Casa · Focus superior',meta:'9 ejercicios · ~54 min',activityName:'Full body casa (superior)',activityCat:'fuerza',alert:'Ejercicios del fisio SIEMPRE antes de empezar · Calentamiento 5 min sin tocar el suelo · 🔄 = sustituye a un ejercicio sin material o que molesta',coreExercises:['CAL_PUSH','CH_DIPS','C_C1','C_C2','C_A1'],blocks:[{label:'Bloque A — Empuje',exercises:['CAL_PUSH','CH_DIPS']},{label:'Bloque B — Tirón',exercises:['C_C1','C_C2']},{label:'Bloque C — Bíceps',exercises:['C_A1','C_A2']},{label:'Bloque D — Equilibrio y pierna',exercises:['CAL_HSHAPE','C_E5']},{label:'Bloque E — Core',exercises:['C_D2']}]},
+  casa_abs:{id:'casa_abs',title:'Casa · Focus abdominales',meta:'6 ejercicios · ~37 min',activityName:'Full body casa (abs)',activityCat:'fuerza',alert:'Ejercicios del fisio SIEMPRE antes de empezar · Calentamiento 5 min sin tocar el suelo',coreExercises:['CAL_PUSH','C_E4','CAL_HOLLOW','C_D1'],blocks:[{label:'Bloque A — Empuje y glúteo',exercises:['CAL_PUSH','C_E4']},{label:'Bloque B — Core',exercises:['CAL_HOLLOW','CAL_COMP','C_D1','CAL_LSIT']}]},
+  fisio:{id:'fisio',title:'Fisio · Cuello y rodilla',meta:'5 ejercicios · ~20 min',activityName:'Fisio',activityCat:'fisio',alert:'Sin calentamiento ni vuelta a la calma · Se hace cada 2 días, independiente de las demás sesiones',coreExercises:['F_C1','F_C2','F_R1'],blocks:[{label:'Cuello',exercises:['F_C1','F_C2']},{label:'Rodilla',exercises:['F_R1','C_E2','F_R2']}]}
 };
 
 // ============ EXERCISES DATA ============
@@ -660,6 +690,14 @@ const EX={
   CG_PULL:{id:'CG_PULL',name:'Dominadas en máquina asistida',zone:'Dorsal + bíceps',sets:'3-4 × 6-10',tempo:'2s tirón · 3s bajada',rest:'60-90 seg',levels:4,weightLevels:['Asistencia alta','Asistencia media','Asistencia baja','Peso corporal'],alerts:[{type:'warn',text:'Más kg de asistencia = más fácil. Progresa REDUCIENDO la asistencia.'}],technique:'Máquina asistida. Rodillas/pies en el pad. Baja las escápulas y tira con los codos cerca, barbilla sobre la barra.',video:'https://www.youtube.com/shorts/JcGwiiGyYFA',svg:svgCali},
   CG_CORE:{id:'CG_CORE',name:'Máquina de abdominales',zone:'Recto abdominal (flexión de tronco)',sets:'3 × 12-15',tempo:'2s flexión · 3s vuelta',rest:'45 seg',levels:5,weightLevels:[10,15,20,25,30],alerts:[{type:'warn',text:'Enrolla la columna con el abdomen, no tires con los brazos. Caderas fijas.'}],technique:'Sentada, pecho contra el pad, pies bajo los rodillos. Flexiona el tronco llevando el pecho hacia las caderas.',video:'https://www.youtube.com/shorts/mnRhbUB3Fjs',svg:svgCali},
   CG_PALLOF:{id:'CG_PALLOF',name:'Press Pallof (polea)',zone:'Core anti-rotación (transverso + oblicuos)',sets:'3 × 10-12 por lado',tempo:'Extiende · 1-2s fuera',rest:'45 seg',levels:5,weightLevels:[5,7.5,10,12.5,15],alerts:[{type:'warn',text:'Sin arquear la lumbar. El trabajo es "bloquear" el tronco, no empujar con los brazos.'}],technique:'De costado a la polea (altura del pecho), agarre en el esternón. Extiende los brazos al frente resistiendo la rotación. Todas las reps de un lado, luego el otro.',video:'https://www.youtube.com/watch?v=W8Yf1uyUnoM',svg:svgCali},
+  B3:{id:'B3',name:'Curl martillo con mancuernas',zone:'Braquial + braquiorradial',sets:'3 × 10-12',tempo:'2s subida · 3s bajada',rest:'60 seg',levels:5,weightLevels:[5,6,8,10,12],alerts:[{type:'warn',text:'Muñeca recta durante todo el recorrido — no dejes que la mancuerna caiga hacia atrás en la bajada.'}],technique:'De pie, mancuernas a los lados con agarre neutro (palmas mirándose). Codos pegados al cuerpo. Sube 2 seg, baja 3 seg, sin balancear el tronco ni usar impulso.',video:'https://www.youtube.com/watch?v=NyW2fT2gQhM',svg:svgCurl},
+  B4:{id:'B4',name:'Curl de muñeca con mancuerna',zone:'Antebrazo (flexores y extensores)',sets:'3 × 15',tempo:'Controlado',rest:'45 seg',levels:5,weightLevels:[2,3,4,5,6],alerts:[{type:'warn',text:'Peso ligero: el antebrazo es un grupo pequeño, no fuerces con cargas altas — prioriza el rango completo y controlado.'}],technique:'Sentada, antebrazo apoyado en el muslo o en un banco, muñeca libre en el borde. Con la palma hacia arriba, deja caer el peso soltando la muñeca y luego flexiona llevando los nudillos hacia el techo. Muy poco recorrido — el movimiento es solo de muñeca.',video:'https://www.youtube.com/shorts/xY8c6LcLRao',svg:svgCurl},
+  D2:{id:'D2',name:'Press francés con mancuerna',zone:'Tríceps — cabeza larga',sets:'3 × 10-12',tempo:'Controlado · sin bloquear',rest:'60 seg',levels:5,weightLevels:[4,5,6,8,10],alerts:[{type:'warn',text:'Cuello apoyado en el banco todo el tiempo. Empieza con poco peso — perder el control aquí es más delicado que en otros ejercicios de tríceps.'}],technique:'Tumbada en el banco, mancuernas por encima del pecho con los brazos extendidos, agarre neutro. Baja las mancuernas hacia los lados de la cabeza (no hacia la frente) doblando solo los codos, manteniendo los brazos fijos en vertical. Extiende de vuelta sin bloquear el codo.',video:'https://www.youtube.com/watch?v=8ncEJDm7Cig',svg:svgPressFrances},
+  C_E5:{id:'C_E5',name:'Sentadilla a la silla',zone:'Cuádriceps + glúteo',sets:'3 × 10-12',tempo:'Bajada controlada',rest:'60 seg',levels:5,weightLevels:['Silla alta, apoyo de manos','Silla alta, sin apoyo','Silla altura estándar','Silla estándar + pausa 2s abajo','Silla estándar + mancuernas 2-4 kg al pecho'],alerts:[{type:'warn',text:'Las rodillas no deben colapsar hacia dentro. Si notas molestia, sube la altura de la silla o reduce el rango antes de bajar peso o profundidad.'}],technique:'De pie delante de una silla, pies al ancho de cadera. Baja de forma controlada hasta tocar ligeramente el asiento con los glúteos, sin dejarte caer — el control es más importante que la velocidad. Empuja con los talones para subir, sin bloquear las rodillas arriba.',video:'https://m.youtube.com/shorts/9FwV5CKn9-Y',svg:svgCali},
+  F_C1:{id:'F_C1',name:'Rotaciones suaves de vértebras',zone:'Cervicales — movilidad',sets:'2 × 8-10 (lento)',tempo:'Muy lento',rest:'20 seg',levels:1,weightLevels:null,alerts:[],technique:'Tumbada. Gira la cabeza lentamente arriba y abajo sin despegar la cabeza del suelo.',video:'',svg:svgCali},
+  F_C2:{id:'F_C2',name:'Encogimiento de hombros con banda',zone:'Trapecio superior + estabilidad cervical',sets:'3 × 15 (mínimo)',tempo:'Aguanta arriba · baja controlado',rest:'30 seg',levels:5,weightLevels:['Banda suave','Banda media','Banda fuerte','Banda fuerte + pausa 1s arriba','Banda fuerte + 3×18-20'],alerts:[{type:'warn',text:'Sube solo los hombros — no arquear el cuello hacia delante ni rotar.'}],technique:'De pie sobre la banda con ambos pies, sujeta los extremos con los brazos extendidos a los lados. Sube los hombros hacia las orejas sin doblar los codos ni echar la cabeza hacia delante, aguanta un instante arriba y baja controlado.',video:'https://www.youtube.com/shorts/aYiZ1_Q7VFw',svg:svgCali},
+  F_R1:{id:'F_R1',name:'Caminar lateral con goma',zone:'Glúteo medio — estabilidad de rodilla',sets:'3 × 15 pasos/lado',tempo:'Pasos pequeños controlados',rest:'30 seg',levels:5,weightLevels:['Banda suave, tobillos','Banda media, tobillos','Banda fuerte, tobillos','Banda fuerte + 20 pasos/lado','Banda fuerte + sentadilla más profunda'],alerts:[{type:'warn',text:'Pasos pequeños y controlados — si das pasos grandes pierdes la tensión y el trabajo del glúteo medio.'}],technique:'Goma alrededor de los tobillos, rodillas ligeramente flexionadas (mini sentadilla). Da pasos laterales manteniendo tensión constante en la goma, sin que las rodillas colapsen hacia dentro ni el peso se vaya a los talones.',video:'https://www.youtube.com/watch?v=M5uxEQH5BUM',svg:svgCali},
+  F_R2:{id:'F_R2',name:'Plancha lateral con una pierna',zone:'Oblicuos + glúteo medio (rodilla)',sets:'3 × 10/lado',tempo:'Cadera estable',rest:'30 seg',levels:5,weightLevels:['Apoyo rodilla + pierna arriba estática','Plancha completa, pierna estática','Plancha completa + elevación en reps','+ pausa 1s arriba','+ banda en tobillos'],alerts:[{type:'warn',text:'Si la cadera cae o rota al elevar la pierna, es que el rango es demasiado grande — reduce la altura de la elevación.'}],technique:'Plancha lateral apoyada en el antebrazo, cuerpo en línea recta. Desde ahí, eleva la pierna de arriba manteniendo la cadera estable (sin rotar hacia atrás), baja controlada sin tocar la de abajo, y repite.',video:'https://www.youtube.com/shorts/WQGmnxitXb4',svg:svgPlancha},
   C_E4:{id:'C_E4',name:'Puente de glúteos con banda',zone:'Glúteo mayor + glúteo medio',sets:'3 × 15',tempo:'Empuje · 3s bajada',rest:'45 seg',levels:4,weightLevels:['Banda suave · 3×15','Banda media · 3×15','1 pierna (sin banda)','1 pierna + banda'],alerts:[{type:'warn',text:'Sin hiperextensión lumbar arriba'}],technique:'Tumbada. Banda sobre las rodillas. Empuja rodillas hacia fuera al elevar las caderas. Aprieta glúteos 1 seg.',video:'https://www.youtube.com/watch?v=zkCABP4bzlU',svg:svgPuente}
 };
 
@@ -732,13 +770,16 @@ function getWeekRange(mondayISO){
   const end=new Date(days[6].iso);
   return days[0].date+'–'+days[6].date+' '+months[end.getMonth()];
 }
+// Determines if a week's objectives are met (for streak). Fisio does NOT count.
+// Rule: 2 fuerza + 2 movilidad + (1 funcional OR 1 cardio)
+function weekObjectivesMet(counts){
+  return counts.fuerza>=2 && counts.movilidad>=2 && (counts.funcional+counts.cardio)>=1;
+}
 function calcRacha(){
-  const mins={fuerza:2,movilidad:2,cardio:1,funcional:1};
   const PAUSE_COOLDOWN=4; // weeks before pause can be used again
   const today=new Date();
 
   // Build week-by-week completion status from oldest relevant week to current week (current week excluded from streak — only counts once complete)
-  // We need to evaluate weeks going backwards from last week (not current, which is still in progress) up to 52 weeks
   const weekStatus=[]; // index 0 = most recent COMPLETE week (last week), going backwards
   for(let w=1;w<=52;w++){
     const mon=new Date(today);mon.setDate(today.getDate()-today.getDay()+(today.getDay()===0?-6:1)-w*7);
@@ -751,27 +792,23 @@ function calcRacha(){
         if(counts[e.cat]!==undefined)counts[e.cat]++;
       });
     });
-    const met=Object.keys(mins).every(function(cat){return counts[cat]>=mins[cat];});
+    const met=weekObjectivesMet(counts);
     weekStatus.push({week:w,met:met,hasData:hasAnyData});
-    // Stop scanning once we hit a week with absolutely no data AND we're already past week 8 (avoid scanning all 52 weeks pointlessly for new users)
     if(!hasAnyData&&w>8&&weekStatus.slice(-4).every(function(ws){return!ws.hasData;}))break;
   }
 
   // Walk forward through time (reverse the array) applying pause logic
-  const chrono=weekStatus.slice().reverse(); // oldest to newest (last complete week)
+  const chrono=weekStatus.slice().reverse();
   let racha=0;
-  let weeksSincePauseUsed=Infinity; // how many weeks since the joker was last used
+  let weeksSincePauseUsed=Infinity;
   chrono.forEach(function(ws){
     if(ws.met){
       racha++;
       weeksSincePauseUsed++;
     } else {
-      // Week failed — check if pause is available
       if(weeksSincePauseUsed>=PAUSE_COOLDOWN){
-        // Use the joker — streak survives, doesn't increment
         weeksSincePauseUsed=0;
       } else {
-        // No joker available — streak breaks
         racha=0;
         weeksSincePauseUsed=Infinity;
       }
@@ -782,8 +819,6 @@ function calcRacha(){
 }
 
 function getRachaStatus(){
-  // Returns info about whether current/last week used a pause, for UI display
-  const mins={fuerza:2,movilidad:2,cardio:1,funcional:1};
   const today=new Date();
   const mon=new Date(today);mon.setDate(today.getDate()-today.getDay()+(today.getDay()===0?-6:1)-7);
   const mondayISO=localDateISO(mon);
@@ -793,7 +828,7 @@ function getRachaStatus(){
       if(counts[e.cat]!==undefined)counts[e.cat]++;
     });
   });
-  const lastWeekMet=Object.keys(mins).every(function(cat){return counts[cat]>=mins[cat];});
+  const lastWeekMet=weekObjectivesMet(counts);
   return{lastWeekMet:lastWeekMet};
 }
 
@@ -822,13 +857,21 @@ function renderSemana(){
 }
 function renderObjectives(){
   const mon=currentMondayISO();const days=getWeekDays(mon);
-  const counts={fuerza:0,movilidad:0,cardio:0,funcional:0};
+  const counts={fuerza:0,movilidad:0,cardio:0,funcional:0,fisio:0};
   days.forEach(d=>(state.weekData[d.iso]||[]).filter(e=>e.status==='done').forEach(e=>{if(counts[e.cat]!==undefined)counts[e.cat]++}));
-  const mins={fuerza:2,movilidad:2,cardio:1,funcional:1};
-  const labels={fuerza:'Fuerza',movilidad:'Movilidad',cardio:'Cardio',funcional:'Funcional'};
-  document.getElementById('obj-grid').innerHTML=Object.keys(counts).map(cat=>{
-    const v=counts[cat],m=mins[cat],cls=v>=m?'ok':'warn';
-    return'<div class="obj-tile"><div class="obj-tile-label">'+labels[cat]+' (mín. '+m+')</div><div class="obj-tile-val '+cls+'">'+v+' sesiones</div></div>';
+  var tiles=[];
+  // Movilidad (min 2)
+  tiles.push({label:'Movilidad (mín. 2)',v:counts.movilidad,ok:counts.movilidad>=2,txt:counts.movilidad+' sesiones'});
+  // Fuerza (min 2)
+  tiles.push({label:'Fuerza (mín. 2)',v:counts.fuerza,ok:counts.fuerza>=2,txt:counts.fuerza+' sesiones'});
+  // Funcional O Cardio (basta 1 de cualquiera)
+  var fcTotal=counts.funcional+counts.cardio;
+  tiles.push({label:'Funcional o cardio (mín. 1)',v:fcTotal,ok:fcTotal>=1,txt:counts.funcional+' func · '+counts.cardio+' cardio'});
+  // Fisio (min 4, no cuenta para racha)
+  tiles.push({label:'Fisio (mín. 4)',v:counts.fisio,ok:counts.fisio>=4,txt:counts.fisio+' sesiones'});
+  document.getElementById('obj-grid').innerHTML=tiles.map(function(t){
+    var cls=t.ok?'ok':'warn';
+    return'<div class="obj-tile"><div class="obj-tile-label">'+t.label+'</div><div class="obj-tile-val '+cls+'">'+t.txt+'</div></div>';
   }).join('');
 }
 function renderDays(){
@@ -1193,10 +1236,10 @@ function openExercise(id,origin){
       const s=todaySession.series[i]||{};
       const autofill=i===0?'onchange="autofillSeries(\'kg\',this.value)" ':'';
       const autofillR=i===0?'onchange="autofillSeries(\'reps\',this.value)" ':'';
-      return'<div class="serie-row"><div class="serie-num">'+(i+1)+'</div><div class="serie-input-wrap"><div class="serie-input-group"><div class="serie-input-label">kg</div><input type="number" inputmode="decimal" class="serie-input" id="kg-'+i+'" value="'+(s.kg||'')+'" placeholder="—" '+autofill+'></div><div class="serie-input-group"><div class="serie-input-label">reps</div><input type="number" inputmode="numeric" class="serie-input" id="reps-'+i+'" value="'+(s.reps||'')+'" placeholder="—" '+autofillR+'></div></div></div>';
+      return'<div class="serie-row"><div class="serie-num">'+(i+1)+'</div><div class="serie-input-wrap"><div class="serie-input-group"><div class="serie-input-label">kg</div><input type="number" inputmode="decimal" class="serie-input" id="kg-'+i+'" value="'+(s.kg||'')+'" placeholder="—" oninput="saveCurrentExData()" '+autofill+'></div><div class="serie-input-group"><div class="serie-input-label">reps</div><input type="number" inputmode="numeric" class="serie-input" id="reps-'+i+'" value="'+(s.reps||'')+'" placeholder="—" oninput="saveCurrentExData()" '+autofillR+'></div></div></div>';
     }).join('');
     const notasEl=document.getElementById('ex-notas');
-    if(notasEl){notasEl.value=todaySession.notes||'';notasEl.removeAttribute('readonly');notasEl.style.color='';}
+    if(notasEl){notasEl.value=todaySession.notes||'';notasEl.removeAttribute('readonly');notasEl.style.color='';notasEl.setAttribute('oninput','saveCurrentExData()');}
   }
 
   updateDoneBtn(todayDone);
@@ -1211,10 +1254,10 @@ function setExEditMode(id){
     const s=todaySession.series[i]||{};
     const autofill=i===0?'onchange="autofillSeries(\'kg\',this.value)" ':'';
     const autofillR=i===0?'onchange="autofillSeries(\'reps\',this.value)" ':'';
-    return'<div class="serie-row"><div class="serie-num">'+(i+1)+'</div><div class="serie-input-wrap"><div class="serie-input-group"><div class="serie-input-label">kg</div><input type="number" inputmode="decimal" class="serie-input" id="kg-'+i+'" value="'+(s.kg||'')+'" placeholder="—" '+autofill+'></div><div class="serie-input-group"><div class="serie-input-label">reps</div><input type="number" inputmode="numeric" class="serie-input" id="reps-'+i+'" value="'+(s.reps||'')+'" placeholder="—" '+autofillR+'></div></div></div>';
+    return'<div class="serie-row"><div class="serie-num">'+(i+1)+'</div><div class="serie-input-wrap"><div class="serie-input-group"><div class="serie-input-label">kg</div><input type="number" inputmode="decimal" class="serie-input" id="kg-'+i+'" value="'+(s.kg||'')+'" placeholder="—" oninput="saveCurrentExData()" '+autofill+'></div><div class="serie-input-group"><div class="serie-input-label">reps</div><input type="number" inputmode="numeric" class="serie-input" id="reps-'+i+'" value="'+(s.reps||'')+'" placeholder="—" oninput="saveCurrentExData()" '+autofillR+'></div></div></div>';
   }).join('');
   const notasEl=document.getElementById('ex-notas');
-  if(notasEl){notasEl.value=todaySession.notes||'';notasEl.removeAttribute('readonly');notasEl.style.color='';}
+  if(notasEl){notasEl.value=todaySession.notes||'';notasEl.removeAttribute('readonly');notasEl.style.color='';notasEl.setAttribute('oninput','saveCurrentExData()');}
 }
 function autofillSeries(field,val){
   if(!val)return;
@@ -1233,10 +1276,23 @@ function saveCurrentExData(){
   if(!state.exData[id])state.exData[id]={};
   const today=localDateISO();
   if(!state.exData[id].sessions)state.exData[id].sessions={};
-  state.exData[id].sessions[today]={
-    series:Array.from({length:3},function(_,i){return{kg:document.getElementById('kg-'+i)?.value||'',reps:document.getElementById('reps-'+i)?.value||''};}),
-    notes:document.getElementById('ex-notas')?.value||''
-  };
+  // Read DOM values safely (no optional chaining for Safari compatibility)
+  const series=Array.from({length:3},function(_,i){
+    const kgEl=document.getElementById('kg-'+i);
+    const repsEl=document.getElementById('reps-'+i);
+    return{kg:kgEl?kgEl.value:'',reps:repsEl?repsEl.value:''};
+  });
+  const notasEl=document.getElementById('ex-notas');
+  const notes=notasEl?notasEl.value:'';
+  // Don't overwrite existing saved data with all-empty values
+  const hasNewData=series.some(function(s){return s.kg||s.reps;})||notes;
+  const existing=state.exData[id].sessions[today];
+  const existingHasData=existing&&(existing.series||[]).some(function(s){return s.kg||s.reps;});
+  if(!hasNewData&&existingHasData){
+    // Inputs are empty but we already have saved data for today — don't wipe it
+    return;
+  }
+  state.exData[id].sessions[today]={series:series,notes:notes};
   // Keep last 30 days only
   const dates=Object.keys(state.exData[id].sessions).sort();
   if(dates.length>30)dates.slice(0,dates.length-30).forEach(function(d){delete state.exData[id].sessions[d];});
@@ -1299,6 +1355,14 @@ const WEIGHT_THRESHOLDS={
   C_E2: null,
   C_E3: null,
   C_E4: null,
+  B3: [5,6,8,10,12],
+  B4: [2,3,4,5,6],
+  D2: [4,5,6,8,10],
+  C_E5: null,
+  F_C1: null,
+  F_C2: null,
+  F_R1: null,
+  F_R2: null,
   CAL_PUSH: null,
   CAL_HOLLOW: null,
   CAL_COMP: null,
@@ -1346,7 +1410,8 @@ const TARGET_REPS={
   I_A1:15,I_A2:12,I_B1:12,I_B2:15,I_C1:12,I_C2:10,I_D1:10,
   C_A1:12,C_A2:10,C_B1:10,C_B2:8,C_B3:12,
   C_C1:12,C_C2:15,C_C3:15,C_D1:8,C_D2:20,
-  C_E1:8,C_E2:15,C_E3:15,C_E4:15,
+  C_E1:8,C_E2:15,C_E3:15,C_E4:15,C_E5:12,
+  B3:12,B4:15,D2:12,F_C1:1,F_C2:15,F_R1:15,F_R2:10,
   CAL_PUSH:1,CAL_HOLLOW:1,CAL_COMP:1,CAL_FROG:1,CAL_HSHAPE:1,CAL_WALL:1,CAL_LSIT:1,CH_DIPS:1,CH_PULL:1,CG_DIPS:1,CG_PULL:1,CG_CORE:1,CG_PALLOF:1
 };
 
@@ -1480,7 +1545,7 @@ function goBack(to){
 function openVideo(){window.open(EX[state.currentExercise].video,'_blank')}
 
 // ============ HISTORIAL ============
-const CAT_COLORS={fuerza:'#6B9FD4',movilidad:'#4CAF8A',cardio:'#E8A855',funcional:'#9B8FE8'};
+const CAT_COLORS={fuerza:'#6B9FD4',movilidad:'#4CAF8A',cardio:'#E8A855',funcional:'#9B8FE8',fisio:'#4DB6AC'};
 const MONTHS=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
 function renderHistorial(){
@@ -1590,7 +1655,7 @@ let editingExId=null;
 // custom exercises stored separately
 let customEx=ld('customEx')||{};
 // custom session block mappings
-const BLOCK_MAP={sup_A:{sid:'sup',bidx:0},sup_B:{sid:'sup',bidx:1},sup_C:{sid:'sup',bidx:2},sup_D:{sid:'sup',bidx:3},inf_A:{sid:'inf',bidx:0},inf_B:{sid:'inf',bidx:1},inf_C:{sid:'inf',bidx:2},inf_D:{sid:'inf',bidx:3},cal_casa_A:{sid:'cal_casa',bidx:0},cal_casa_B:{sid:'cal_casa',bidx:1},cal_casa_C:{sid:'cal_casa',bidx:2},cal_gym_A:{sid:'cal_gym',bidx:0},cal_gym_B:{sid:'cal_gym',bidx:1},cal_gym_C:{sid:'cal_gym',bidx:2},casa_A:{sid:'casa',bidx:0},casa_B:{sid:'casa',bidx:1},casa_C:{sid:'casa',bidx:2},casa_D:{sid:'casa',bidx:3},casa_E:{sid:'casa',bidx:4}};
+const BLOCK_MAP={sup_A:{sid:'sup',bidx:0},sup_B:{sid:'sup',bidx:1},sup_C:{sid:'sup',bidx:2},sup_D:{sid:'sup',bidx:3},inf_A:{sid:'inf',bidx:0},inf_B:{sid:'inf',bidx:1},inf_C:{sid:'inf',bidx:2},inf_D:{sid:'inf',bidx:3},full_A:{sid:'full',bidx:0},full_B:{sid:'full',bidx:1},full_C:{sid:'full',bidx:2},full_D:{sid:'full',bidx:3},espalda_A:{sid:'espalda',bidx:0},espalda_B:{sid:'espalda',bidx:1},pecho_A:{sid:'pecho',bidx:0},pecho_B:{sid:'pecho',bidx:1},pecho_C:{sid:'pecho',bidx:2},casa_sup_A:{sid:'casa_sup',bidx:0},casa_sup_B:{sid:'casa_sup',bidx:1},casa_sup_C:{sid:'casa_sup',bidx:2},casa_sup_D:{sid:'casa_sup',bidx:3},casa_sup_E:{sid:'casa_sup',bidx:4},casa_abs_A:{sid:'casa_abs',bidx:0},casa_abs_B:{sid:'casa_abs',bidx:1},fisio_A:{sid:'fisio',bidx:0},fisio_B:{sid:'fisio',bidx:1}};
 
 function initPinPad(){
   const dots=document.getElementById('pin-dots');
@@ -1809,7 +1874,7 @@ function applyCustomEx(){
     }
   });
   saveEx();
-  const BLOCK_MAP={sup_A:{sid:'sup',bidx:0},sup_B:{sid:'sup',bidx:1},sup_C:{sid:'sup',bidx:2},sup_D:{sid:'sup',bidx:3},inf_A:{sid:'inf',bidx:0},inf_B:{sid:'inf',bidx:1},inf_C:{sid:'inf',bidx:2},inf_D:{sid:'inf',bidx:3},cal_casa_A:{sid:'cal_casa',bidx:0},cal_casa_B:{sid:'cal_casa',bidx:1},cal_casa_C:{sid:'cal_casa',bidx:2},cal_gym_A:{sid:'cal_gym',bidx:0},cal_gym_B:{sid:'cal_gym',bidx:1},cal_gym_C:{sid:'cal_gym',bidx:2},casa_A:{sid:'casa',bidx:0},casa_B:{sid:'casa',bidx:1},casa_C:{sid:'casa',bidx:2},casa_D:{sid:'casa',bidx:3},casa_E:{sid:'casa',bidx:4}};
+  const BLOCK_MAP={sup_A:{sid:'sup',bidx:0},sup_B:{sid:'sup',bidx:1},sup_C:{sid:'sup',bidx:2},sup_D:{sid:'sup',bidx:3},inf_A:{sid:'inf',bidx:0},inf_B:{sid:'inf',bidx:1},inf_C:{sid:'inf',bidx:2},inf_D:{sid:'inf',bidx:3},full_A:{sid:'full',bidx:0},full_B:{sid:'full',bidx:1},full_C:{sid:'full',bidx:2},full_D:{sid:'full',bidx:3},espalda_A:{sid:'espalda',bidx:0},espalda_B:{sid:'espalda',bidx:1},pecho_A:{sid:'pecho',bidx:0},pecho_B:{sid:'pecho',bidx:1},pecho_C:{sid:'pecho',bidx:2},casa_sup_A:{sid:'casa_sup',bidx:0},casa_sup_B:{sid:'casa_sup',bidx:1},casa_sup_C:{sid:'casa_sup',bidx:2},casa_sup_D:{sid:'casa_sup',bidx:3},casa_sup_E:{sid:'casa_sup',bidx:4},casa_abs_A:{sid:'casa_abs',bidx:0},casa_abs_B:{sid:'casa_abs',bidx:1},fisio_A:{sid:'fisio',bidx:0},fisio_B:{sid:'fisio',bidx:1}};
   Object.keys(customEx).forEach(id=>{
     const c=customEx[id];
     // Apply overrides to built-in exercises
