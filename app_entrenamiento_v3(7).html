@@ -486,6 +486,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="modal-title" id="edit-ex-title">Editar ejercicio</div>
     <div style="display:flex;flex-direction:column;gap:12px">
       <div>
+        <div class="serie-input-label" style="margin-bottom:4px">Nombre</div>
+        <input type="text" class="serie-input" id="edit-ex-name" style="text-align:left;width:100%">
+      </div>
+      <div>
+        <div class="serie-input-label" style="margin-bottom:4px">Zona muscular</div>
+        <input type="text" class="serie-input" id="edit-ex-zone" style="text-align:left;width:100%">
+      </div>
+      <div>
         <div class="serie-input-label" style="margin-bottom:4px">Rango de reps</div>
         <input type="text" class="serie-input" id="edit-ex-sets" style="text-align:left;width:100%">
       </div>
@@ -1793,6 +1801,8 @@ function openEditEx(id){
   const ex=allEx[id];if(!ex)return;
   editingExId=id;
   document.getElementById('edit-ex-title').textContent=ex.name;
+  document.getElementById('edit-ex-name').value=ex.name||'';
+  document.getElementById('edit-ex-zone').value=ex.zone||'';
   document.getElementById('edit-ex-sets').value=ex.sets||'';
   document.getElementById('edit-ex-rir').value=ex.rir||'';
   document.getElementById('edit-ex-tempo').value=ex.tempo||'';
@@ -1805,6 +1815,9 @@ function openEditEx(id){
 function closeEditEx(){document.getElementById('modal-edit-ex').classList.remove('open');editingExId=null;}
 function saveEditEx(){
   if(!editingExId)return;
+  const id=editingExId;
+  const name=document.getElementById('edit-ex-name').value.trim();
+  const zone=document.getElementById('edit-ex-zone').value.trim();
   const sets=document.getElementById('edit-ex-sets').value.trim();
   const rir=document.getElementById('edit-ex-rir').value.trim();
   const tempo=document.getElementById('edit-ex-tempo').value.trim();
@@ -1813,23 +1826,36 @@ function saveEditEx(){
   const weightLevelsRaw=document.getElementById('edit-ex-weightlevels').value.trim();
   const weightLevels=weightLevelsRaw?weightLevelsRaw.split('\n').map(s=>s.trim()).filter(Boolean):null;
   const technique=document.getElementById('edit-ex-technique').value.trim();
-  if(EX[editingExId]){
-    if(!customEx[editingExId])customEx[editingExId]={...EX[editingExId]};
-    if(sets){customEx[editingExId].sets=sets;EX[editingExId].sets=sets;}
-    if(rir){customEx[editingExId].rir=rir;EX[editingExId].rir=rir;}
-    if(tempo){customEx[editingExId].tempo=tempo;EX[editingExId].tempo=tempo;}
-    if(video){customEx[editingExId].video=video;EX[editingExId].video=video;}
-    if(imageUrl){customEx[editingExId].imageUrl=imageUrl;EX[editingExId].imageUrl=imageUrl;}
-    if(weightLevels){customEx[editingExId].weightLevels=weightLevels;EX[editingExId].weightLevels=weightLevels;}
-    if(technique){customEx[editingExId].technique=technique;EX[editingExId].technique=technique;}
-  } else if(customEx[editingExId]){
-    if(sets)customEx[editingExId].sets=sets;
-    if(rir)customEx[editingExId].rir=rir;
-    if(tempo)customEx[editingExId].tempo=tempo;
-    if(video)customEx[editingExId].video=video;
-    if(imageUrl)customEx[editingExId].imageUrl=imageUrl;
-    if(weightLevels)customEx[editingExId].weightLevels=weightLevels;
-    if(technique)customEx[editingExId].technique=technique;
+  if(!name){showToast('El nombre no puede estar vacío');return;}
+
+  const isCustomNew=customEx[id]&&customEx[id]._new;
+  // Ensure a customEx entry exists to hold the overrides / definition
+  if(!customEx[id]){
+    customEx[id]=EX[id]?{...EX[id]}:{id:id};
+  }
+  const c=customEx[id];
+  c.name=name;
+  c.zone=zone;
+  c.sets=sets;
+  c.rir=rir;
+  c.tempo=tempo;
+  c.video=video;
+  if(imageUrl)c.imageUrl=imageUrl;else delete c.imageUrl;
+  if(weightLevels){c.weightLevels=weightLevels;c.levels=weightLevels.length;}
+  c.technique=technique;
+  // For custom-created exercises, restore svg closure and keep it live in EX
+  if(isCustomNew&&(!c.svg||typeof c.svg!=='function')){
+    const nm=name;
+    c.svg=function(){return'<svg viewBox="0 0 300 80" style="width:100%;display:block"><text x="150" y="45" text-anchor="middle" font-size="14" fill="#6b6b67">'+nm+'</text></svg>';};
+  }
+  // Mirror changes into the live EX object so they show immediately
+  if(EX[id]){
+    EX[id].name=name;EX[id].zone=zone;EX[id].sets=sets;EX[id].rir=rir;EX[id].tempo=tempo;EX[id].video=video;
+    if(imageUrl)EX[id].imageUrl=imageUrl;else delete EX[id].imageUrl;
+    if(weightLevels){EX[id].weightLevels=weightLevels;EX[id].levels=weightLevels.length;}
+    EX[id].technique=technique;
+  } else {
+    EX[id]=c;
   }
   sv('customEx',customEx);
   closeEditEx();renderEditorExList();
