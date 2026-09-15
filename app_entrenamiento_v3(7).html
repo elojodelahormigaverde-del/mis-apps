@@ -409,25 +409,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         </div>
         <div style="margin-bottom:10px">
           <div class="serie-input-label">Sesión</div>
-          <select id="new-ex-session" style="width:100%;padding:8px 10px;border:0.5px solid var(--border-med);border-radius:var(--rs);font-size:14px;font-family:inherit;color:var(--text);background:var(--card)">
-            <option value="sup_A">Tren superior — Bloque A</option>
-            <option value="sup_B">Tren superior — Bloque B</option>
-            <option value="sup_C">Tren superior — Bloque C</option>
-            <option value="sup_D">Tren superior — Bloque D</option>
-            <option value="inf_A">Tren inferior — Bloque A</option>
-            <option value="inf_B">Tren inferior — Bloque B</option>
-            <option value="inf_C">Tren inferior — Bloque C</option>
-            <option value="inf_D">Tren inferior — Bloque D</option>
-            <option value="casa_A">Casa — Bloque A</option>
-            <option value="casa_B">Casa — Bloque B</option>
-            <option value="casa_C">Casa — Bloque C</option>
-            <option value="casa_D">Casa — Bloque D</option>
-            <option value="casa_E">Casa — Bloque E</option>
-          </select>
+          <select id="new-ex-session" onchange="updateBlockOptions()" style="width:100%;padding:8px 10px;border:0.5px solid var(--border-med);border-radius:var(--rs);font-size:14px;font-family:inherit;color:var(--text);background:var(--card)"></select>
         </div>
         <div style="margin-bottom:10px">
-          <div class="serie-input-label">Series × reps</div>
-          <input type="text" class="serie-input" id="new-ex-sets" placeholder="3 × 12" style="text-align:left;width:100%">
+          <div class="serie-input-label">Bloque</div>
+          <select id="new-ex-block" style="width:100%;padding:8px 10px;border:0.5px solid var(--border-med);border-radius:var(--rs);font-size:14px;font-family:inherit;color:var(--text);background:var(--card)"></select>
+        </div>
+        <div style="margin-bottom:10px">
+          <div class="serie-input-label">Rango de reps</div>
+          <input type="text" class="serie-input" id="new-ex-sets" placeholder="8-12" style="text-align:left;width:100%">
+        </div>
+        <div style="margin-bottom:10px">
+          <div class="serie-input-label">RIR</div>
+          <input type="text" class="serie-input" id="new-ex-rir" placeholder="2" style="text-align:left;width:100%">
+        </div>
         </div>
         <div style="margin-bottom:10px">
           <div class="serie-input-label">Zona muscular</div>
@@ -491,8 +486,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="modal-title" id="edit-ex-title">Editar ejercicio</div>
     <div style="display:flex;flex-direction:column;gap:12px">
       <div>
-        <div class="serie-input-label" style="margin-bottom:4px">Series × reps</div>
+        <div class="serie-input-label" style="margin-bottom:4px">Rango de reps</div>
         <input type="text" class="serie-input" id="edit-ex-sets" style="text-align:left;width:100%">
+      </div>
+      <div>
+        <div class="serie-input-label" style="margin-bottom:4px">RIR</div>
+        <input type="text" class="serie-input" id="edit-ex-rir" style="text-align:left;width:100%">
       </div>
       <div>
         <div class="serie-input-label" style="margin-bottom:4px">Tempo</div>
@@ -1769,29 +1768,19 @@ function lockEditor(){
   document.getElementById('editor-content').style.display='none';
 }
 function renderEditorExList(){
-  // merge built-in + custom
+  updateSessionOptions();
   const allEx={...EX,...customEx};
-  const sessions=[
-    {label:'Gimnasio · Tren superior',ids:['A1','A2','A3','B1','B2','C1','C2','C3','C4','D1','CAL_PUSH','CAL_HOLLOW','CAL_COMP','CAL_FROG','CAL_HSHAPE','CAL_WALL','CAL_LSIT','CH_DIPS','CH_PULL','CG_DIPS','CG_PULL','CG_CORE','CG_PALLOF']},
-    {label:'Gimnasio · Tren inferior',ids:['I_A1','I_A2','I_B1','I_B2','I_C1','I_C2','I_D1']},
-    {label:'Casa · Brazos y espalda',ids:['C_A1','C_A2','C_B1','C_B2','C_B3','C_C1','C_C2','C_C3','C_D1','C_D2','C_E1','C_E2','C_E3','C_E4']}
-  ];
-  // add custom ids to relevant sessions
-  Object.keys(customEx).forEach(id=>{
-    const bk=customEx[id]._block;
-    if(bk){
-      const {sid,bidx}=BLOCK_MAP[bk]||{};
-      if(sid&&SESSIONS[sid]&&SESSIONS[sid].blocks[bidx]){
-        if(!SESSIONS[sid].blocks[bidx].exercises.includes(id))
-          SESSIONS[sid].blocks[bidx].exercises.push(id);
-      }
-    }
+  // Build session list dynamically from SESSIONS
+  const sessions=Object.keys(SESSIONS).map(function(sid){
+    const ids=[];
+    SESSIONS[sid].blocks.forEach(function(b){b.exercises.forEach(function(e){if(ids.indexOf(e)<0)ids.push(e);});});
+    return{label:SESSIONS[sid].title,ids:ids};
   });
   let html='';
   sessions.forEach(s=>{
-    const ids=[...s.ids,...Object.keys(customEx).filter(id=>customEx[id]._session===s.label)];
+    if(!s.ids.length)return;
     html+='<div class="prog-session-label">'+s.label+'</div><div class="card prog-card">';
-    [...new Set(ids)].forEach(id=>{
+    s.ids.forEach(id=>{
       const ex=allEx[id];if(!ex)return;
       html+='<div class="editor-ex-row" onclick="openEditEx(\''+id+'\')">'+'<div class="ex-info"><div class="ex-name">'+ex.name+'</div><div class="ex-detail">'+ex.sets+' · '+(ex.video?'<span style="color:var(--blue)">vídeo ✓</span>':'sin vídeo')+'</div></div><div class="ex-arrow"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke-width:1.5;fill:none;stroke:var(--text3);stroke-linecap:round;stroke-linejoin:round"><polyline points="9 18 15 12 9 6"/></svg></div></div>';
     });
@@ -1805,6 +1794,7 @@ function openEditEx(id){
   editingExId=id;
   document.getElementById('edit-ex-title').textContent=ex.name;
   document.getElementById('edit-ex-sets').value=ex.sets||'';
+  document.getElementById('edit-ex-rir').value=ex.rir||'';
   document.getElementById('edit-ex-tempo').value=ex.tempo||'';
   document.getElementById('edit-ex-video').value=ex.video||'';
   document.getElementById('edit-ex-image').value=ex.imageUrl||'';
@@ -1816,6 +1806,7 @@ function closeEditEx(){document.getElementById('modal-edit-ex').classList.remove
 function saveEditEx(){
   if(!editingExId)return;
   const sets=document.getElementById('edit-ex-sets').value.trim();
+  const rir=document.getElementById('edit-ex-rir').value.trim();
   const tempo=document.getElementById('edit-ex-tempo').value.trim();
   const video=document.getElementById('edit-ex-video').value.trim();
   const imageUrl=document.getElementById('edit-ex-image').value.trim();
@@ -1825,6 +1816,7 @@ function saveEditEx(){
   if(EX[editingExId]){
     if(!customEx[editingExId])customEx[editingExId]={...EX[editingExId]};
     if(sets){customEx[editingExId].sets=sets;EX[editingExId].sets=sets;}
+    if(rir){customEx[editingExId].rir=rir;EX[editingExId].rir=rir;}
     if(tempo){customEx[editingExId].tempo=tempo;EX[editingExId].tempo=tempo;}
     if(video){customEx[editingExId].video=video;EX[editingExId].video=video;}
     if(imageUrl){customEx[editingExId].imageUrl=imageUrl;EX[editingExId].imageUrl=imageUrl;}
@@ -1832,6 +1824,7 @@ function saveEditEx(){
     if(technique){customEx[editingExId].technique=technique;EX[editingExId].technique=technique;}
   } else if(customEx[editingExId]){
     if(sets)customEx[editingExId].sets=sets;
+    if(rir)customEx[editingExId].rir=rir;
     if(tempo)customEx[editingExId].tempo=tempo;
     if(video)customEx[editingExId].video=video;
     if(imageUrl)customEx[editingExId].imageUrl=imageUrl;
@@ -1842,22 +1835,40 @@ function saveEditEx(){
   closeEditEx();renderEditorExList();
   showToast('Ejercicio guardado');
 }
+function updateSessionOptions(){
+  const sel=document.getElementById('new-ex-session');
+  if(!sel)return;
+  sel.innerHTML=Object.keys(SESSIONS).map(function(sid){
+    return'<option value="'+sid+'">'+SESSIONS[sid].title+'</option>';
+  }).join('');
+  updateBlockOptions();
+}
+function updateBlockOptions(){
+  const sid=document.getElementById('new-ex-session').value;
+  const blockSel=document.getElementById('new-ex-block');
+  if(!blockSel||!SESSIONS[sid])return;
+  blockSel.innerHTML=SESSIONS[sid].blocks.map(function(b,i){
+    return'<option value="'+i+'">'+b.label+'</option>';
+  }).join('');
+}
 function addNewExercise(){
   const name=document.getElementById('new-ex-name').value.trim();
   const sets=document.getElementById('new-ex-sets').value.trim();
+  const rir=document.getElementById('new-ex-rir').value.trim();
   const video=document.getElementById('new-ex-video').value.trim();
   const zone=document.getElementById('new-ex-zone').value.trim();
   const technique=document.getElementById('new-ex-technique').value.trim();
   const wlRaw=document.getElementById('new-ex-weightlevels').value.trim();
   const weightLevels=wlRaw?wlRaw.split('\n').map(s=>s.trim()).filter(Boolean):null;
-  const block=document.getElementById('new-ex-session').value;
+  const sid=document.getElementById('new-ex-session').value;
+  const bidx=parseInt(document.getElementById('new-ex-block').value)||0;
   if(!name){showToast('Añade un nombre');return;}
   const id='CUSTOM_'+Date.now();
-  const {sid,bidx}=BLOCK_MAP[block]||{};
-  const sessionLabel=document.getElementById('new-ex-session').options[document.getElementById('new-ex-session').selectedIndex].text;
-  const exName=name; // capture for svg closure
-  customEx[id]={id,name,zone:zone||'',sets:sets||'3 × 12',tempo:'',rest:'60 seg',levels:weightLevels?weightLevels.length:3,weightLevels:weightLevels,alerts:[],technique:technique||'',video:video||'',svg:function(){return'<svg viewBox="0 0 300 80" style="width:100%;display:block"><text x="150" y="45" text-anchor="middle" font-size="14" fill="#6b6b67">'+exName+'</text></svg>';},_block:block,_session:sessionLabel};
-  if(sid&&SESSIONS[sid]&&SESSIONS[sid].blocks[bidx]){
+  const sessionLabel=SESSIONS[sid]?SESSIONS[sid].title:'';
+  const blockLabel=(SESSIONS[sid]&&SESSIONS[sid].blocks[bidx])?SESSIONS[sid].blocks[bidx].label:'';
+  const exName=name;
+  customEx[id]={id,name,zone:zone||'',sets:sets||'8-12',rir:rir||'',tempo:'',rest:'60 seg',levels:weightLevels?weightLevels.length:3,weightLevels:weightLevels,alerts:[],technique:technique||'',video:video||'',svg:function(){return'<svg viewBox="0 0 300 80" style="width:100%;display:block"><text x="150" y="45" text-anchor="middle" font-size="14" fill="#6b6b67">'+exName+'</text></svg>';},_sid:sid,_bidx:bidx,_session:sessionLabel,_blockLabel:blockLabel};
+  if(SESSIONS[sid]&&SESSIONS[sid].blocks[bidx]){
     if(!SESSIONS[sid].blocks[bidx].exercises.includes(id))
       SESSIONS[sid].blocks[bidx].exercises.push(id);
   }
@@ -1865,6 +1876,7 @@ function addNewExercise(){
   sv('customEx',customEx);
   document.getElementById('new-ex-name').value='';
   document.getElementById('new-ex-sets').value='';
+  document.getElementById('new-ex-rir').value='';
   document.getElementById('new-ex-zone').value='';
   document.getElementById('new-ex-technique').value='';
   document.getElementById('new-ex-weightlevels').value='';
@@ -1969,13 +1981,14 @@ function applyCustomEx(){
         c.svg=function(){return'<svg viewBox="0 0 300 80" style="width:100%;display:block"><text x="150" y="45" text-anchor="middle" font-size="14" fill="#6b6b67">'+(c.name||id)+'</text></svg>';};
       }
       EX[id]=c;
-      // Add to correct session block
-      if(c._block&&BLOCK_MAP[c._block]){
-        const {sid,bidx}=BLOCK_MAP[c._block];
-        if(SESSIONS[sid]&&SESSIONS[sid].blocks[bidx]){
-          if(!SESSIONS[sid].blocks[bidx].exercises.includes(id)){
-            SESSIONS[sid].blocks[bidx].exercises.push(id);
-          }
+      // Determine target session/block: new format (_sid/_bidx) or legacy (_block via BLOCK_MAP)
+      let tSid=c._sid,tBidx=c._bidx;
+      if((tSid===undefined||tBidx===undefined)&&c._block&&BLOCK_MAP[c._block]){
+        tSid=BLOCK_MAP[c._block].sid;tBidx=BLOCK_MAP[c._block].bidx;
+      }
+      if(tSid&&SESSIONS[tSid]&&SESSIONS[tSid].blocks[tBidx]){
+        if(!SESSIONS[tSid].blocks[tBidx].exercises.includes(id)){
+          SESSIONS[tSid].blocks[tBidx].exercises.push(id);
         }
       }
     }
@@ -1986,23 +1999,26 @@ applyCustomEx();
 
 // ============ PROGRESO ============
 function renderProgreso(){
-  const sessions=[
-    {label:'Gimnasio · Tren superior',ids:['A1','A2','A3','B1','B2','C1','C2','C3','C4','D1','CAL_PUSH','CAL_HOLLOW','CAL_COMP','CAL_FROG','CAL_HSHAPE','CAL_WALL','CAL_LSIT','CH_DIPS','CH_PULL','CG_DIPS','CG_PULL','CG_CORE','CG_PALLOF']},
-    {label:'Gimnasio · Tren inferior',ids:['I_A1','I_A2','I_B1','I_B2','I_C1','I_C2','I_D1']},
-    {label:'Casa · Brazos y espalda',ids:['C_A1','C_A2','C_B1','C_B2','C_B3','C_C1','C_C2','C_C3','C_D1','C_D2','C_E1','C_E2','C_E3','C_E4']}
-  ];
+  const allEx={...EX,...customEx};
+  const sessions=Object.keys(SESSIONS).map(function(sid){
+    const ids=[];
+    SESSIONS[sid].blocks.forEach(function(b){b.exercises.forEach(function(e){if(ids.indexOf(e)<0)ids.push(e);});});
+    return{label:SESSIONS[sid].title,ids:ids};
+  });
   let html='',sugHtml='';
   sessions.forEach(s=>{
+    if(!s.ids.length)return;
     html+='<div class="prog-session-label">'+s.label+'</div><div class="card prog-card">';
     s.ids.forEach(id=>{
-      const ex=EX[id],data=state.exData[id]||{};
+      const ex=allEx[id];if(!ex)return;
+      const data=state.exData[id]||{};
       const userLevel=data.level||0;
       // only show bar if user has started
       const pct=userLevel>0?Math.round((userLevel/ex.levels)*100):0;
       const isUp=data.comfortableSessions>=2&&userLevel>0;
       const levelText=userLevel>0?('Niv.'+userLevel+(isUp?' ↑':'')):'-';
       html+='<div class="prog-row" onclick="openExercise(\''+id+'\',\'progreso\')"><div class="prog-name">'+ex.name+'</div><div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:'+pct+'%"></div></div><div class="prog-level '+(isUp?'up':'')+'">'+levelText+'</div></div>';
-      if(isUp)sugHtml+='<div class="alert alert-success" style="margin:0 16px 8px"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>${ex.name}: considera subir al Nivel ${userLevel+1}</div>';
+      if(isUp)sugHtml+='<div class="alert alert-success" style="margin:0 16px 8px"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>'+ex.name+': considera subir al Nivel '+(userLevel+1)+'</div>';
     });
     html+='</div>';
   });
