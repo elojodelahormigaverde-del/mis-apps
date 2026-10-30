@@ -910,11 +910,11 @@ function doneThisWeek(sid){
 }
 function renderCombos(){
   const el=document.getElementById('combo-card');if(!el)return;
-  let html='<div class="combo-title">¿Qué gimnasio hago esta semana?</div><div class="combo-sub">Según los días que tengas. En verde, lo que ya has hecho.</div>';
+  let html='<div class="combo-title" style="margin-bottom:8px">¿Qué gimnasio hago esta semana?</div>';
   COMBOS.forEach(function(c){
     html+='<div class="combo-row"><div class="combo-days">'+c.days+(c.ideal?'<div class="combo-ideal">ideal</div>':'')+'</div><div class="combo-body"><div class="combo-chips">'
       +c.ids.map(function(id){const d=doneThisWeek(id);return'<button class="combo-chip'+(d?' done':'')+'" onclick="openSession(\''+id+'\')">'+(d?'✓ ':'')+COMBO_LABEL[id]+'</button>';}).join('')
-      +'</div><div class="combo-why">'+c.why+'</div></div></div>';
+      +'</div></div></div>';
   });
   el.innerHTML=html;
 }
