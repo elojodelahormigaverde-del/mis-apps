@@ -552,13 +552,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="page-header">
     <button class="back-btn" onclick="goBack('session')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg><span id="chart-back-label">Ejercicio</span></button>
     <div class="page-title" id="chart-title">Progresión</div>
-    <div class="page-sub" id="chart-subtitle">Peso mínimo · repeticiones mínimas</div>
+    <div class="page-sub" id="chart-subtitle">Serie más débil · peso mínimo × sus reps</div>
   </div>
   <div style="margin:14px 16px 10px;background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);padding:16px">
     <canvas id="chart-canvas" style="width:100%"></canvas>
     <div id="chart-empty" style="display:none;text-align:center;padding:40px 0;font-size:13px;color:var(--text3)">Aún no hay datos registrados</div>
   </div>
-  <div style="padding:0 16px 6px;font-size:11px;color:var(--text3);text-align:center">El número sobre cada punto indica las repeticiones mínimas de esa sesión</div>
+  <div style="padding:0 16px 6px;font-size:11px;color:var(--text3);text-align:center">El número sobre cada punto indica las repeticiones de la serie con menos peso</div>
   <div id="chart-stats" style="margin:8px 16px 16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"></div>
 </div>
 
@@ -644,11 +644,11 @@ function localDateISO(d){
 
 // ============ SESSIONS DATA ============
 const SESSIONS={
-  sup:{id:'sup',title:'Gym · Tren superior',meta:'9-10 ejercicios · ~55 min',activityName:'Fuerza tren superior',activityCat:'fuerza',alert:'',coreExercises:['A1','A2','B1','C1','C2'],blocks:[{label:'Bloque A — Espalda',exercises:['A1','A2','A3']},{label:'Bloque B — Bíceps',exercises:['B1']},{label:'Bloque C — Pecho y hombros',exercises:['C1','C2','C3','C4']},{label:'Bloque D — Tríceps',exercises:['D1','D2']}]},
-  inf:{id:'inf',title:'Gym · Tren inferior',meta:'7 ejercicios · ~47 min',activityName:'Fuerza tren inferior',activityCat:'fuerza',alert:'',coreExercises:['I_A1','I_A2','I_C1'],blocks:[{label:'Bloque A — Glúteos',exercises:['I_A1','I_A2']},{label:'Bloque B — Cuádriceps',exercises:['I_B1','I_B2']},{label:'Bloque C — Isquiotibiales',exercises:['I_C1','I_C2']},{label:'Bloque D — Equilibrio',exercises:['I_D1']}]},
-  full:{id:'full',title:'Gym · Full body',meta:'8 ejercicios · ~49 min',activityName:'Full body',activityCat:'fuerza',alert:'',coreExercises:['C1','A2','I_B1','I_A2'],blocks:[{label:'Bloque A — Torso',exercises:['C1','A2']},{label:'Bloque B — Pierna',exercises:['I_B1','I_A2']},{label:'Bloque C — Hombro',exercises:['C4']},{label:'Bloque D — Core',exercises:['CG_CORE','CG_PALLOF','CAL_HOLLOW']}]},
-  espalda:{id:'espalda',title:'Gym · Espalda y bíceps',meta:'6 ejercicios · ~40 min',activityName:'Espalda, bíceps y antebrazo',activityCat:'fuerza',alert:'Variante: sustituye A1 por dominadas en máquina asistida cada 3-4 semanas',coreExercises:['A1','A2','B1'],blocks:[{label:'Bloque A — Espalda',exercises:['A1','A2','A3']},{label:'Bloque B — Bíceps y antebrazo',exercises:['B1','B3','B4']}]},
-  pecho:{id:'pecho',title:'Gym · Pecho y tríceps',meta:'6-8 ejercicios · ~40 min',activityName:'Pecho, hombro y tríceps',activityCat:'fuerza',alert:'Variante: sustituye C1 por fondos en máquina asistida cada 3-4 semanas',coreExercises:['C1','C3','C2'],blocks:[{label:'Bloque A — Pecho y hombro',exercises:['C1','C3','C2','C4']},{label:'Bloque B — Tríceps',exercises:['D1','D2']},{label:'Bloque C — Equilibrio (opcional)',exercises:['CAL_FROG','CAL_WALL']}]},
+  sup:{id:'sup',title:'Gym · Tren superior',meta:'9-10 ejercicios · ~55 min (+5 opcional · +8 abdominales)',activityName:'Fuerza tren superior',activityCat:'fuerza',alert:'Bíceps: alterna curl inclinado y curl predicador (uno por sesión) · Press francés opcional · Abdominales: elige opción A o B',coreExercises:['A1','A2','B5','C1','A5','D1'],blocks:[{label:'Bloque A — Espalda',exercises:['A1','A2','A3']},{label:'Bloque B — Bíceps (alterna uno por sesión)',exercises:['B5','B6']},{label:'Bloque C — Pecho y hombros',exercises:['C1','C3','C4','A5']},{label:'Bloque D — Tríceps (press francés opcional)',exercises:['D1','D2']},{label:'Abdominales (opcional) — Opción A',exercises:['CG_CRUNCH','CG_KNEE']},{label:'Abdominales (opcional) — Opción B',exercises:['CG_CHOP','C_D1']}]},
+  inf:{id:'inf',title:'Gym · Glúteo y cadena posterior',meta:'4-5 ejercicios · ~30 min (+5 opcional · +8 abdominales)',activityName:'Glúteo y cadena posterior',activityCat:'fuerza',alert:'Sin carga directa de rodilla · Hiperextensión 45°: alterna con el RDL o añádela si hay tiempo · Abdominales: elige opción A o B',coreExercises:['I_A2','I_C2','I_C3','I_A1'],blocks:[{label:'Bloque A — Glúteo mayor y cadena posterior',exercises:['I_A2','I_C2','I_C4']},{label:'Bloque B — Glúteo (aislamiento)',exercises:['I_C3','I_A1']},{label:'Abdominales (opcional) — Opción A',exercises:['CG_KNEE','CG_CHOP']},{label:'Abdominales (opcional) — Opción B',exercises:['CG_CRUNCH','CG_PALLOF']}]},
+  full:{id:'full',title:'Gym · Full body',meta:'8 ejercicios · ~50 min',activityName:'Full body',activityCat:'fuerza',alert:'',coreExercises:['C1','A2','I_C2','I_A2'],blocks:[{label:'Bloque A — Torso',exercises:['C1','A2']},{label:'Bloque B — Glúteo y cadena posterior',exercises:['I_C2','I_A2']},{label:'Bloque C — Hombro',exercises:['C4']},{label:'Bloque D — Core',exercises:['CG_CORE','CG_PALLOF','CAL_HOLLOW']}]},
+  espalda:{id:'espalda',title:'Gym · Espalda y bíceps',meta:'7-8 ejercicios · ~47 min (+5 opcional · +8 abdominales)',activityName:'Espalda, bíceps y antebrazo',activityCat:'fuerza',alert:'Variante: sustituye A1 por dominadas en máquina asistida cada 3-4 semanas · Abdominales: elige opción A o B',coreExercises:['A1','A2','A4','B5','B6'],blocks:[{label:'Bloque A — Espalda',exercises:['A1','A2','A4','A3']},{label:'Bloque B — Bíceps y antebrazo (curl de muñeca opcional)',exercises:['B5','B6','B3','B4']},{label:'Abdominales (opcional) — Opción A',exercises:['CG_CRUNCH','CG_KNEE']},{label:'Abdominales (opcional) — Opción B',exercises:['CG_CHOP','C_D1']}]},
+  pecho:{id:'pecho',title:'Gym · Pecho y tríceps',meta:'6-9 ejercicios · ~40 min (+5-20 opcional · +8 abdominales)',activityName:'Pecho, hombro y tríceps',activityCat:'fuerza',alert:'Variante: sustituye C1 por fondos en máquina asistida cada 3-4 semanas · Abdominales: elige opción A o B',coreExercises:['C1','C3','A5','D1','D3'],blocks:[{label:'Bloque A — Pecho y hombro',exercises:['C1','C3','C4','A5']},{label:'Bloque B — Tríceps (press francés opcional)',exercises:['D1','D3','D2']},{label:'Bloque C — Equilibrio (opcional)',exercises:['CAL_FROG','CAL_WALL']},{label:'Abdominales (opcional) — Opción A',exercises:['CG_CORE','C_D1']},{label:'Abdominales (opcional) — Opción B',exercises:['CG_WCRUNCH','CG_PALLOF']}]},
   casa_sup:{id:'casa_sup',title:'Casa · Focus superior',meta:'9 ejercicios · ~54 min',activityName:'Full body casa (superior)',activityCat:'fuerza',alert:'🔄 = sustituye a un ejercicio sin material o que molesta',coreExercises:['CAL_PUSH','CH_DIPS','C_C1','C_C2','C_A1'],blocks:[{label:'Bloque A — Empuje',exercises:['CAL_PUSH','CH_DIPS']},{label:'Bloque B — Tirón',exercises:['C_C1','C_C2']},{label:'Bloque C — Bíceps',exercises:['C_A1','C_A2']},{label:'Bloque D — Equilibrio y pierna',exercises:['CAL_HSHAPE','C_E5']},{label:'Bloque E — Core',exercises:['C_D2']}]},
   casa_abs:{id:'casa_abs',title:'Casa · Focus abdominales',meta:'6 ejercicios · ~37 min',activityName:'Full body casa (abs)',activityCat:'fuerza',alert:'',coreExercises:['CAL_PUSH','C_E4','CAL_HOLLOW','C_D1'],blocks:[{label:'Bloque A — Empuje y glúteo',exercises:['CAL_PUSH','C_E4']},{label:'Bloque B — Core',exercises:['CAL_HOLLOW','CAL_COMP','C_D1','CAL_LSIT']}]},
   fisio:{id:'fisio',title:'Fisio · Cuello y rodilla',meta:'5 ejercicios · ~20 min',activityName:'Fisio',activityCat:'fisio',alert:'Sin calentamiento ni vuelta a la calma · Se hace cada 2 días, independiente de las demás sesiones',coreExercises:['F_C1','F_C2','F_R1'],blocks:[{label:'Cuello',exercises:['F_C1','F_C2']},{label:'Rodilla',exercises:['F_R1','C_E2','F_R2']}]}
@@ -708,7 +708,18 @@ const EX={
   F_C2:{id:'F_C2',name:'Encogimiento de hombros con banda',zone:'Trapecio superior + estabilidad cervical',sets:'12-15',rir:'suave',tempo:'Aguanta arriba · baja controlado',rest:'30 seg',levels:5,weightLevels:['Banda suave','Banda media','Banda fuerte','Banda fuerte + pausa 1s arriba','Banda fuerte + 3×18-20'],alerts:[{type:'warn',text:'Sube solo los hombros — no arquear el cuello hacia delante ni rotar.'}],technique:'De pie sobre la banda con ambos pies, sujeta los extremos con los brazos extendidos a los lados. Sube los hombros hacia las orejas sin doblar los codos ni echar la cabeza hacia delante, aguanta un instante arriba y baja controlado.',video:'https://www.youtube.com/shorts/aYiZ1_Q7VFw',svg:svgCali},
   F_R1:{id:'F_R1',name:'Caminar lateral con goma',zone:'Glúteo medio — estabilidad de rodilla',sets:'12-15 pasos/lado',rir:'3-4',tempo:'Pasos pequeños controlados',rest:'30 seg',levels:5,weightLevels:['Banda suave, tobillos','Banda media, tobillos','Banda fuerte, tobillos','Banda fuerte + 20 pasos/lado','Banda fuerte + sentadilla más profunda'],alerts:[{type:'warn',text:'Pasos pequeños y controlados — si das pasos grandes pierdes la tensión y el trabajo del glúteo medio.'}],technique:'Goma alrededor de los tobillos, rodillas ligeramente flexionadas (mini sentadilla). Da pasos laterales manteniendo tensión constante en la goma, sin que las rodillas colapsen hacia dentro ni el peso se vaya a los talones.',video:'https://www.youtube.com/watch?v=M5uxEQH5BUM',svg:svgCali},
   F_R2:{id:'F_R2',name:'Plancha lateral con una pierna',zone:'Oblicuos + glúteo medio (rodilla)',sets:'8-10/lado',rir:'2-3',tempo:'Cadera estable',rest:'30 seg',levels:5,weightLevels:['Apoyo rodilla + pierna arriba estática','Plancha completa, pierna estática','Plancha completa + elevación en reps','+ pausa 1s arriba','+ banda en tobillos'],alerts:[{type:'warn',text:'Si la cadera cae o rota al elevar la pierna, es que el rango es demasiado grande — reduce la altura de la elevación.'}],technique:'Plancha lateral apoyada en el antebrazo, cuerpo en línea recta. Desde ahí, eleva la pierna de arriba manteniendo la cadera estable (sin rotar hacia atrás), baja controlada sin tocar la de abajo, y repite.',video:'https://www.youtube.com/shorts/WQGmnxitXb4',svg:svgPlancha},
-  C_E4:{id:'C_E4',name:'Puente de glúteos con banda',zone:'Glúteo mayor + glúteo medio',sets:'12-15',rir:'2',tempo:'Empuje · 3s bajada',rest:'45 seg',levels:4,weightLevels:['Banda suave · 3×15','Banda media · 3×15','1 pierna (sin banda)','1 pierna + banda'],alerts:[{type:'warn',text:'Sin hiperextensión lumbar arriba'}],technique:'Tumbada. Banda sobre las rodillas. Empuja rodillas hacia fuera al elevar las caderas. Aprieta glúteos 1 seg.',video:'https://www.youtube.com/watch?v=zkCABP4bzlU',svg:svgPuente}
+  C_E4:{id:'C_E4',name:'Puente de glúteos con banda',zone:'Glúteo mayor + glúteo medio',sets:'12-15',rir:'2',tempo:'Empuje · 3s bajada',rest:'45 seg',levels:4,weightLevels:['Banda suave · 3×15','Banda media · 3×15','1 pierna (sin banda)','1 pierna + banda'],alerts:[{type:'warn',text:'Sin hiperextensión lumbar arriba'}],technique:'Tumbada. Banda sobre las rodillas. Empuja rodillas hacia fuera al elevar las caderas. Aprieta glúteos 1 seg.',video:'https://www.youtube.com/watch?v=zkCABP4bzlU',svg:svgPuente},
+  B5:{id:'B5',name:'Curl inclinado con mancuernas',zone:'Bíceps — cabeza larga (estiramiento)',sets:'10-12',rir:'1-2',tempo:'2s subida · 3s bajada',rest:'60 seg',levels:5,weightLevels:[4,5,6,7.5,8],alerts:[{type:'warn',text:'Cabeza y hombros apoyados en el respaldo todo el tiempo. Codos quietos apuntando al suelo — no los adelantes al subir.'}],technique:'Banco a 45-60°. Sentada con espalda, hombros y cabeza apoyados, brazos colgando por detrás de la línea del tronco. Empieza con agarre neutro y gira la palma hacia arriba mientras subes (supinación). Baja en 3 seg hasta casi extender el codo.',video:'https://www.youtube.com/shorts/rAx_tf13V5k',svg:svgCurl},
+  B6:{id:'B6',name:'Curl predicador (banco Scott)',zone:'Bíceps — cabeza corta',sets:'10-12',rir:'1-2',tempo:'2s subida · 3s bajada',rest:'60 seg',levels:5,weightLevels:[4,5,6,7.5,8],alerts:[{type:'warn',text:'No extiendas del todo abajo ni rebotes: es la posición de más estrés para el tendón. Peso más bajo que en el curl de pie.'}],technique:'Axila apoyada en el borde del banco y la parte trasera del brazo pegada al cojín. Con mancuerna a una mano (o barra EZ). Sube sin despegar el codo y baja controlado hasta casi extender.',video:'https://www.youtube.com/shorts/iKgfqFkdeWY',svg:svgCurl},
+  A4:{id:'A4',name:'Remo polea baja unilateral',zone:'Dorsal + romboides (unilateral, rotación)',sets:'10-12/lado',rir:'2',tempo:'2s tirón · 3s vuelta',rest:'60 seg',levels:5,weightLevels:[10,12.5,15,17.5,20],alerts:[{type:'warn',text:'Tronco alto y cuello neutro. La rotación es pequeña y sale de la parte media de la espalda, no de la lumbar ni del cuello.'}],technique:'En la máquina de remo con un agarre de una mano. Al estirar, deja que el hombro se adelante y el tronco gire ligeramente hacia la polea. Tira llevando el codo hacia la cadera mientras el tronco vuelve al frente. Todas las reps de un lado y luego el otro.',video:'https://www.youtube.com/shorts/Y9vk5jBXx5s',svg:svgRemo},
+  A5:{id:'A5',name:'Pájaros invertidos con mancuernas',zone:'Deltoides posterior + trapecio medio',sets:'12-15',rir:'1-2',tempo:'2s subida · pausa 1s · 3s bajada',rest:'45 seg',levels:5,weightLevels:[2,3,4,5,6],alerts:[{type:'warn',text:'Cabeza en línea con el tronco: no la levantes para mirar al frente ni la dejes caer. Hombros lejos de las orejas.'}],technique:'Banco inclinado a 30-45°, tumbada boca abajo con el pecho apoyado. Brazos colgando, codos ligeramente flexionados, agarre neutro. Abre los brazos hacia los lados hasta la altura de los hombros, pausa y baja despacio.',video:'https://www.youtube.com/shorts/NgWtEwmLvIo',svg:svgElevLat},
+  D3:{id:'D3',name:'Extensión tríceps por encima de la cabeza (polea)',zone:'Tríceps — cabeza larga (estiramiento)',sets:'10-12',rir:'2',tempo:'2s extensión · 3s vuelta',rest:'60 seg',levels:5,weightLevels:[7.5,10,12.5,15,17.5],alerts:[{type:'warn',text:'Cuello neutro: no adelantes la cabeza para dejar pasar la cuerda. Si el hombro molesta en la posición alta, haz el press francés en su lugar.'}],technique:'Polea alta con cuerda (o barra). De espaldas a la polea, un pie adelantado y el tronco algo inclinado hacia delante. Codos junto a la cabeza apuntando al frente. Extiende los brazos sin mover los codos y vuelve despacio hasta notar el estiramiento.',video:'https://www.youtube.com/shorts/NTk0Igxqcsk',svg:svgTricepsPolea},
+  I_C3:{id:'I_C3',name:'Patada de glúteo en polea',zone:'Glúteo mayor',sets:'12-15/lado',rir:'2',tempo:'2s · pausa arriba · 3s bajada',rest:'45 seg',levels:5,weightLevels:[5,7.5,10,12.5,15],alerts:[{type:'warn',text:'Rodilla de apoyo ligeramente flexionada, sin bloquear. La lumbar no se arquea: la pierna sube hasta donde llega el glúteo, no más.'}],technique:'Tobillera en la polea baja. De frente a la máquina, agarrada al soporte, tronco ligeramente inclinado. Lleva la pierna hacia atrás con la rodilla casi extendida, aprieta el glúteo arriba y baja controlado.',video:'https://www.youtube.com/shorts/KMMnggkh5I0',svg:svgCali},
+  I_C4:{id:'I_C4',name:'Hiperextensión 45° (glúteo)',zone:'Glúteo mayor + isquiotibiales',sets:'12-15',rir:'2',tempo:'2s subida · pausa · 3s bajada',rest:'60 seg',levels:4,weightLevels:['Peso corporal','Disco 5 kg','Disco 10 kg','Disco 15 kg'],alerts:[{type:'warn',text:'Cuello neutro, mirada al suelo: no levantes la cabeza al subir. Sube solo hasta la línea del cuerpo, sin hiperextender la lumbar.'}],technique:'Cojín justo por debajo del hueso de la cadera. Pies algo abiertos y girados hacia fuera, espalda ligeramente redondeada. Baja doblando la cadera y sube empujando con el glúteo hasta quedar en línea.',video:'https://www.youtube.com/watch?v=wt4oerFea2s',svg:svgRDL},
+  CG_CRUNCH:{id:'CG_CRUNCH',name:'Crunch en polea',zone:'Recto abdominal (flexión)',sets:'12-15',rir:'1-2',tempo:'2s bajada · pausa · 3s vuelta',rest:'45 seg',levels:5,weightLevels:[10,15,20,25,30],alerts:[{type:'warn',text:'Las manos solo sujetan la cuerda junto a la cabeza: no tires del cuello. Mentón neutro. Arrodillada sobre colchoneta gruesa; si las rodillas molestan, hazlo de pie.'}],technique:'Polea alta con cuerda. Arrodillada frente a la polea, cuerda a los lados de la cabeza. Cadera quieta: enrolla la columna llevando las costillas hacia la pelvis, pausa y vuelve despacio.',video:'https://www.youtube.com/shorts/bd63yN6g_9w',svg:svgCali},
+  CG_KNEE:{id:'CG_KNEE',name:'Elevación de rodillas en silla romana',zone:'Abdomen inferior + flexores de cadera',sets:'10-12',rir:'2',tempo:'2s subida · 3s bajada',rest:'45 seg',levels:4,weightLevels:['Rodillas a 90°','Rodillas al pecho','Rodillas al pecho + pausa 2s','Piernas extendidas'],alerts:[{type:'warn',text:'Hombros bajos, lejos de las orejas. Sin balanceo: el trabajo está en enrollar la pelvis al final, no solo en subir las piernas.'}],technique:'Antebrazos en los apoyos y espalda pegada al respaldo. Sube las rodillas hacia el pecho y al final despega ligeramente la pelvis enrollándola. Baja despacio sin dejar caer las piernas.',video:'https://www.youtube.com/watch?v=9APysM090aI',svg:svgCali},
+  CG_CHOP:{id:'CG_CHOP',name:'Leñador en polea',zone:'Oblicuos + core rotacional',sets:'10-12/lado',rir:'2',tempo:'Controlado · 2s vuelta',rest:'45 seg',levels:5,weightLevels:[5,7.5,10,12.5,15],alerts:[{type:'warn',text:'La cabeza acompaña al tronco: no gires ni tires del cuello por separado. La rotación sale del tronco y la cadera, brazos casi extendidos.'}],technique:'Alto→bajo: polea alta, de lado a la máquina; lleva el agarre en diagonal hacia la cadera contraria girando el tronco y pivotando el pie de atrás. Bajo→alto: polea baja, mismo gesto hacia arriba. Todas las reps de un lado y luego el otro.',video:'https://www.youtube.com/shorts/SDZBKghaE9s',svg:svgCali},
+  CG_WCRUNCH:{id:'CG_WCRUNCH',name:'Crunch con disco sobre el pecho',zone:'Recto abdominal (flexión)',sets:'12-15',rir:'2',tempo:'2s subida · 3s bajada',rest:'45 seg',levels:4,weightLevels:[2.5,5,7.5,10],alerts:[{type:'warn',text:'Disco sobre el pecho, nunca detrás de la cabeza. Mentón ligeramente metido y rango corto (solo despegar las escápulas). Colchoneta gruesa por el coxis.'}],technique:'Tumbada, rodillas flexionadas y pies en el suelo. Sujeta el disco contra el pecho. Enrolla el tronco despegando las escápulas, pausa y baja despacio.',video:'https://www.youtube.com/watch?v=2k_OJw9uxBM',svg:svgCali}
 };
 
 // ============ SVGs ============
@@ -1040,11 +1051,12 @@ function finishSession(){
   const fb=document.getElementById('finish-btn');
   fb.classList.add('done');
   fb.innerHTML='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Sesión registrada';
-  // Show stretching
-  openStretching(s.id);
+  // Show stretching (solo si la sesión tiene; fisio no)
+  if(STRETCHING[s.id])openStretching(s.id);
 }
 function openWarmup(sessionId){
-  const items=WARMUP[sessionId]||[];
+  const items=WARMUP[sessionId];
+  if(!items)return;
   document.querySelector('#screen-stretch .page-title').textContent='🔥 Calentamiento';
   document.getElementById('stretch-subtitle').textContent='Antes de empezar · ~5 min';
   document.getElementById('stretch-list').innerHTML=items.map(function(txt,i){
@@ -1056,7 +1068,8 @@ function openWarmup(sessionId){
   showScreen('stretch');
 }
 function openStretching(sessionId){
-  const stretches=STRETCHING[sessionId]||STRETCHING['casa_sup'];
+  const stretches=STRETCHING[sessionId];
+  if(!stretches)return;
   document.querySelector('#screen-stretch .page-title').textContent='🌬️ Vuelta a la calma';
   document.getElementById('stretch-subtitle').textContent='Estiramientos finales · ~4 min';
   document.getElementById('stretch-list').innerHTML=stretches.map(function(s,i){
@@ -1228,10 +1241,9 @@ function openExercise(id,origin){
       });
     }
     if(lastSession&&lastSession.series){
-      const validSeries=lastSession.series.filter(function(s){return parseFloat(s.kg)>0;});
-      const lastKg=validSeries.length?Math.min(...validSeries.map(function(s){return parseFloat(s.kg);})):null;
-      const validReps=lastSession.series.filter(function(s){return parseFloat(s.reps)>0;});
-      const lastReps=validReps.length?Math.min(...validReps.map(function(s){return parseFloat(s.reps);})):null;
+      const combo=minCombo(lastSession.series.filter(function(s){return parseFloat(s.kg)>0;}));
+      const lastKg=combo.kg;
+      const lastReps=combo.reps;
       const summaryKg=lastKg?(lastKg+' kg'+(lastReps?' × '+lastReps+' reps':'')):'—';
       const histSection=histRows
         ?'<div id="ex-hist-detail" style="display:none;margin-top:8px;border-top:0.5px solid var(--border);padding-top:4px">'+histRows+'</div>'
@@ -1345,62 +1357,70 @@ function saveCurrentExData(){
 }
 // ============ LEVEL THRESHOLDS ============
 // weightThresholds[id] = array of kg values, one per level (null = manual)
+// Fisio no tiene calentamiento ni estiramientos (no añadir clave 'fisio')
 const WARMUP={
-  sup:['2 min cardio suave (bici o elíptica, ritmo bajo)','Rotaciones de hombro, 10 adelante + 10 atrás','Círculos de brazo grandes, 10','Band pull-apart o face pull muy ligero, 15 reps','1 serie de aproximación (≈50% del peso) en A2 y en C1'],
-  inf:['3 min cardio suave, rango cómodo para la rodilla','Círculos de cadera de pie, 10 cada sentido','Sentadilla sin peso, rango cómodo, 10 reps','Puente de glúteos sin banda, 10 reps','Movilidad de tobillo contra pared, 8/lado'],
-  full:['3 min cardio suave','Círculos de cadera + hombro combinados','Sentadilla sin peso, 8 reps + press ligero sin peso, 8 reps','Gato-vaca, 8 reps'],
-  espalda:['2 min cardio suave','Rotaciones de hombro + círculos de brazo','Band pull-apart, 15 reps','Rotación de muñecas + abrir/cerrar el puño, 10 cada uno','1 serie de aproximación en A1 o A2'],
-  pecho:['2 min cardio suave','Círculos de brazo + rotaciones de hombro','Elevaciones laterales sin peso o con banda muy suave, 12 reps','Rotación externa de hombro con banda ligera, 10 reps','Flexiones ligeras, 8 reps'],
-  casa_sup:['2-3 min marcha en el sitio o subir/bajar un escalón, ritmo suave','Círculos de brazo y hombro','Flexiones de rodillas, 8 reps','Remo con goma muy ligero, 10 reps','Sentadilla a la silla sin peso, 8 reps'],
-  casa_abs:['2-3 min marcha o movimiento suave','Gato-vaca, 8 reps','Círculos de cadera','Puente de glúteos sin banda, 10 reps','Flexiones ligeras, 8 reps']
+  sup:['2 min cardio suave (bici o elíptica, ritmo bajo)','Rotaciones de hombro, 10 adelante + 10 atrás, y círculos de brazo grandes, 10','Wall slides (antebrazos deslizando por la pared), 8 reps','Band pull-apart o face pull muy ligero, 15 reps','Rotación de muñecas + flexo-extensión de codo, 10 cada uno','1 serie de aproximación (≈50% del peso) en remo polea baja y en press pecho'],
+  inf:['3 min cardio suave (bici o elíptica), rango cómodo para la rodilla','Círculos de cadera de pie, 10 cada sentido','Bisagra de cadera con un palo apoyado en la espalda, 10 reps','Puente de glúteos sin peso, 12 reps','Patada de glúteo de pie sin peso, 10/lado','1 serie de aproximación en hip thrust y en RDL'],
+  full:['3 min cardio suave','Círculos de cadera + rotaciones de hombro','Bisagra de cadera con palo, 8 reps + band pull-apart, 12 reps','Puente de glúteos sin peso, 10 reps','Rotación torácica de pie, brazos cruzados, 8/lado','1 serie de aproximación en press pecho y en RDL'],
+  espalda:['2 min cardio suave','Rotaciones de hombro + círculos de brazo','Band pull-apart, 15 reps','Rotación torácica sentada, 8/lado (prepara el remo unilateral)','Rotación de muñecas + abrir/cerrar el puño + flexo-extensión de codo, 10 cada uno','1 serie de aproximación en jalón o en remo polea baja'],
+  pecho:['2 min cardio suave','Círculos de brazo + rotaciones de hombro','Rotación externa de hombro con banda ligera, 10/lado','Wall slides, 8 reps (prepara la extensión de tríceps por encima de la cabeza)','Elevaciones laterales sin peso o con banda muy suave, 12 reps','Flexiones inclinadas ligeras, 8 reps'],
+  casa_sup:['2-3 min marcha en el sitio o subir/bajar un escalón, ritmo suave','Círculos de brazo y hombro','Movilidad de muñecas: círculos y flexo-extensión, 10 cada uno','Flexiones de rodillas, 8 reps','Remo con goma muy ligero, 10 reps','Sentadilla a la silla sin peso, 8 reps'],
+  casa_abs:['2-3 min marcha o movimiento suave','Gato-vaca, 8 reps (colchoneta doblada bajo las rodillas)','Círculos de cadera','Movilidad de muñecas: círculos y flexo-extensión, 10 cada uno','Puente de glúteos sin banda, 10 reps','Flexiones ligeras, 8 reps']
 };
 const STRETCHING={
   sup:[
     {name:'Colgarse de la barra (dead hang)',desc:'15-30s — sube el tiempo poco a poco, trabajo de agarre.'},
     {name:'Pectoral en marco de puerta',desc:'Antebrazo en el marco, da un paso adelante. 20-30s/lado.'},
     {name:'Dorsal ancho',desc:'Brazo por encima de la cabeza, inclina el torso hacia el lado contrario. 20-30s/lado.'},
-    {name:'Bíceps',desc:'Brazo extendido, palma hacia atrás contra la pared. 20-30s.'},
-    {name:'Tríceps por encima de la cabeza',desc:'Codo detrás de la cabeza, empuja suave con la otra mano. 20-30s/lado.'},
+    {name:'Bíceps',desc:'Brazo extendido, palma hacia atrás contra la pared, gira el cuerpo hacia fuera. 20-30s/lado.'},
+    {name:'Tríceps por encima de la cabeza',desc:'Codo detrás de la cabeza, empuja suave con la otra mano. Cuello neutro. 20-30s/lado.'},
     {name:'Deltoides posterior',desc:'Brazo cruzado al pecho, tira con el otro brazo. 20-30s/lado.'}
   ],
   inf:[
-    {name:'Colgarse de la barra (dead hang)',desc:'15-30s — sube el tiempo poco a poco, trabajo de agarre.'},
-    {name:'Cuádriceps de pie',desc:'Talón al glúteo, suave si molesta la rodilla. 20-30s/lado.'},
-    {name:'Isquiotibiales con pierna apoyada',desc:'Pierna sobre un banco, inclínate desde la cadera. 20-30s/lado.'},
-    {name:'Glúteo (figura 4)',desc:'Tumbada o sentada, tobillo sobre la rodilla contraria. 20-30s/lado.'},
-    {name:'Gemelo contra pared',desc:'Pierna atrás estirada, talón al suelo. 20-30s/lado.'}
+    {name:'Glúteo (figura 4)',desc:'Tumbada, tobillo sobre la rodilla contraria, acerca la pierna al pecho. 20-30s/lado.'},
+    {name:'Isquiotibiales',desc:'Pierna apoyada en un banco, inclínate desde la cadera con la espalda recta. 20-30s/lado.'},
+    {name:'Flexor de cadera de pie',desc:'Zancada corta de pie sin apoyar la rodilla, aprieta el glúteo de la pierna de atrás y lleva la cadera adelante. 20-30s/lado.'},
+    {name:'Torsión suave tumbada',desc:'Boca arriba, lleva la rodilla cruzada al lado contrario; hombros en el suelo. 20s/lado.'},
+    {name:'Rodillas al pecho',desc:'Tumbada, abraza las rodillas suavemente para soltar la lumbar. 30s.'}
   ],
   full:[
-    {name:'Colgarse de la barra (dead hang)',desc:'15-30s — sube el tiempo poco a poco, trabajo de agarre.'},
-    {name:'Cuádriceps de pie',desc:'Talón al glúteo. 20-30s/lado.'},
-    {name:'Isquiotibiales',desc:'Pierna apoyada, inclínate desde la cadera. 20-30s/lado.'},
-    {name:'Pectoral en marco de puerta',desc:'Antebrazo en el marco, paso adelante. 20-30s.'},
-    {name:'Postura del niño',desc:'Cuadrupedia, siéntate sobre los talones, brazos al frente. 30s.'}
+    {name:'Pectoral en marco de puerta',desc:'Antebrazo en el marco, da un paso adelante. 20-30s/lado.'},
+    {name:'Dorsal ancho',desc:'Brazo por encima de la cabeza, inclina el torso hacia el lado contrario. 20-30s/lado.'},
+    {name:'Deltoides posterior',desc:'Brazo cruzado al pecho, tira con el otro brazo. 20-30s/lado.'},
+    {name:'Isquiotibiales',desc:'Pierna apoyada en un banco, inclínate desde la cadera con la espalda recta. 20-30s/lado.'},
+    {name:'Glúteo (figura 4)',desc:'Tumbada, tobillo sobre la rodilla contraria, acerca la pierna al pecho. 20-30s/lado.'},
+    {name:'Abdomen (esfinge)',desc:'Boca abajo apoyada en los antebrazos, cuello largo, mirada al suelo. 20-30s.'}
   ],
   espalda:[
     {name:'Colgarse de la barra (dead hang)',desc:'15-30s — sube el tiempo poco a poco, trabajo de agarre.'},
-    {name:'Dorsal ancho',desc:'Brazo por encima de la cabeza, inclina el torso. 20-30s/lado.'},
-    {name:'Bíceps',desc:'Brazo extendido, palma hacia atrás contra la pared. 20-30s.'},
-    {name:'Antebrazo (flexores y extensores)',desc:'Palma arriba tirando dedos hacia atrás, luego palma abajo tirando. 20s cada uno.'},
-    {name:'Deltoides posterior',desc:'Brazo cruzado al pecho. 20-30s/lado.'}
+    {name:'Dorsal ancho',desc:'Brazo por encima de la cabeza, inclina el torso hacia el lado contrario. 20-30s/lado.'},
+    {name:'Bíceps',desc:'Brazo extendido, palma hacia atrás contra la pared, gira el cuerpo hacia fuera. 20-30s/lado.'},
+    {name:'Antebrazo (flexores y extensores)',desc:'Palma arriba tirando de los dedos hacia atrás, luego palma abajo. 20s cada uno.'},
+    {name:'Deltoides posterior',desc:'Brazo cruzado al pecho, tira con el otro brazo. 20-30s/lado.'},
+    {name:'Rotación torácica sentada',desc:'Brazos cruzados al pecho, gira el tronco despacio a cada lado. 8/lado.'}
   ],
   pecho:[
-    {name:'Colgarse de la barra (dead hang)',desc:'15-30s — sube el tiempo poco a poco, trabajo de agarre.'},
-    {name:'Pectoral en marco de puerta',desc:'Antebrazo en el marco, paso adelante. 20-30s.'},
-    {name:'Tríceps por encima de la cabeza',desc:'Codo detrás de la cabeza. 20-30s/lado.'},
-    {name:'Deltoides anterior y posterior',desc:'Brazo detrás de la espalda (anterior) y cruzado al pecho (posterior). 20-30s cada uno.'}
+    {name:'Pectoral en marco de puerta',desc:'Antebrazo en el marco, da un paso adelante. 20-30s/lado.'},
+    {name:'Deltoides anterior',desc:'Manos entrelazadas detrás de la espalda, abre el pecho sin adelantar la cabeza. 20-30s.'},
+    {name:'Deltoides posterior',desc:'Brazo cruzado al pecho, tira con el otro brazo. 20-30s/lado.'},
+    {name:'Tríceps por encima de la cabeza',desc:'Codo detrás de la cabeza, empuja suave con la otra mano. Cuello neutro. 20-30s/lado.'},
+    {name:'Muñecas',desc:'Palmas apoyadas en la pared o en el suelo, dedos hacia ti, peso suave hacia atrás. 20s.'}
   ],
   casa_sup:[
-    {name:'Pectoral en pared o marco de puerta',desc:'Antebrazo apoyado, paso adelante. 20-30s.'},
-    {name:'Dorsal ancho',desc:'Brazo por encima de la cabeza, inclina el torso. 20-30s/lado.'},
-    {name:'Bíceps / antebrazo',desc:'Brazo extendido, palma variando. 20s cada uno.'},
-    {name:'Cuádriceps de pie',desc:'Talón al glúteo. 20-30s/lado.'}
+    {name:'Pectoral en marco de puerta',desc:'Antebrazo en el marco, da un paso adelante. 20-30s/lado.'},
+    {name:'Dorsal ancho',desc:'Brazo por encima de la cabeza, inclina el torso hacia el lado contrario. 20-30s/lado.'},
+    {name:'Bíceps / antebrazo',desc:'Brazo extendido, palma variando arriba y abajo. 20s cada uno.'},
+    {name:'Tríceps por encima de la cabeza',desc:'Codo detrás de la cabeza, empuja suave con la otra mano. Cuello neutro. 20-30s/lado.'},
+    {name:'Muñecas',desc:'Palmas apoyadas en la pared o en el suelo, dedos hacia ti, peso suave hacia atrás. 20s.'},
+    {name:'Cuádriceps de pie',desc:'Talón hacia el glúteo, suave y sin forzar la rodilla. 20-30s/lado.'}
   ],
   casa_abs:[
-    {name:'Postura del niño',desc:'Siéntate sobre los talones, brazos al frente. 30s.'},
-    {name:'Flexor de cadera (zancada baja)',desc:'Rodilla en el suelo, cadera hacia delante. 20-30s/lado.'},
-    {name:'Isquiotibiales',desc:'Pierna apoyada, inclínate desde la cadera. 20-30s/lado.'},
-    {name:'Torsión suave de columna tumbada',desc:'Boca arriba, lleva la rodilla cruzada al lado contrario. 20s/lado.'}
+    {name:'Rodillas al pecho',desc:'Tumbada, abraza las rodillas suavemente para soltar la lumbar. 30s.'},
+    {name:'Flexor de cadera de pie',desc:'Zancada corta de pie sin apoyar la rodilla, aprieta el glúteo de la pierna de atrás y lleva la cadera adelante. 20-30s/lado.'},
+    {name:'Isquiotibiales',desc:'Pierna apoyada en un banco, inclínate desde la cadera con la espalda recta. 20-30s/lado.'},
+    {name:'Torsión suave tumbada',desc:'Boca arriba, lleva la rodilla cruzada al lado contrario; hombros en el suelo. 20s/lado.'},
+    {name:'Abdomen (esfinge)',desc:'Boca abajo apoyada en los antebrazos, cuello largo, mirada al suelo. 20-30s.'},
+    {name:'Muñecas',desc:'Palmas apoyadas en la pared o en el suelo, dedos hacia ti, peso suave hacia atrás. 20s.'}
   ]
 };
 const WEIGHT_THRESHOLDS={
@@ -1458,7 +1478,19 @@ const WEIGHT_THRESHOLDS={
   CG_DIPS: null,
   CG_PULL: null,
   CG_CORE: [10,15,20,25,30],
-  CG_PALLOF: [5,7.5,10,12.5,15]
+  CG_PALLOF: [5,7.5,10,12.5,15],
+  // v3.8
+  B5: [4,5,6,7.5,8],
+  B6: [4,5,6,7.5,8],
+  A4: [10,12.5,15,17.5,20],
+  A5: [2,3,4,5,6],
+  D3: [7.5,10,12.5,15,17.5],
+  I_C3: [5,7.5,10,12.5,15],
+  I_C4: null,
+  CG_CRUNCH: [10,15,20,25,30],
+  CG_KNEE: null,
+  CG_CHOP: [5,7.5,10,12.5,15],
+  CG_WCRUNCH: [2.5,5,7.5,10]
 };
 
 const LEVEL_NOTES={
@@ -1484,7 +1516,16 @@ const LEVEL_NOTES={
   C_A1:'Equipamiento limita. +1 kg por nivel es el único salto posible en casa.',
   C_B1:'Tríceps en casa. Misma lógica: +1 kg por nivel.',
   C_B3:'Más de 6 kg → ejercicio equivalente en el gimnasio.',
-  C_D1:'Core profundo. La progresión real es por dificultad, no solo por peso.'
+  C_D1:'Core profundo. La progresión real es por dificultad, no solo por peso.',
+  B5:'Bíceps en estiramiento: pesa menos que el curl de pie. Prioriza el recorrido completo.',
+  B6:'Bíceps aislado. Sube peso solo si la bajada sigue siendo controlada.',
+  A4:'Unilateral: el peso por lado es menor que en el remo a dos manos.',
+  A5:'Deltoides posterior — músculo pequeño. Técnica y pausa antes que peso.',
+  D3:'Cabeza larga en estiramiento. Saltos pequeños: el hombro manda.',
+  I_C3:'Glúteo aislado. Si la lumbar se arquea, baja el peso.',
+  CG_CRUNCH:'Recto abdominal. Prioriza enrollar la columna sobre subir peso.',
+  CG_CHOP:'Rotacional. Control antes que carga.',
+  CG_WCRUNCH:'Rango corto y controlado. El peso nunca justifica tirar del cuello.'
 };
 
 // Target reps per exercise (minimum reps needed to confirm level)
@@ -1495,9 +1536,20 @@ const TARGET_REPS={
   C_C1:12,C_C2:15,C_C3:15,C_D1:8,C_D2:20,
   C_E1:8,C_E2:15,C_E3:15,C_E4:15,C_E5:12,
   B3:12,B4:15,D2:12,F_C1:1,F_C2:15,F_R1:15,F_R2:10,
-  CAL_PUSH:1,CAL_HOLLOW:1,CAL_COMP:1,CAL_FROG:1,CAL_HSHAPE:1,CAL_WALL:1,CAL_LSIT:1,CH_DIPS:1,CH_PULL:1,CG_DIPS:1,CG_PULL:1,CG_CORE:1,CG_PALLOF:1
+  CAL_PUSH:1,CAL_HOLLOW:1,CAL_COMP:1,CAL_FROG:1,CAL_HSHAPE:1,CAL_WALL:1,CAL_LSIT:1,CH_DIPS:1,CH_PULL:1,CG_DIPS:1,CG_PULL:1,CG_CORE:1,CG_PALLOF:1,
+  B5:10,B6:10,A4:10,A5:12,D3:10,I_C3:12,I_C4:12,CG_CRUNCH:12,CG_KNEE:10,CG_CHOP:10,CG_WCRUNCH:12
 };
 
+// Serie más débil = menor peso; si varias series comparten ese peso, la de menos reps.
+// Devuelve la combinación real peso × reps de esa serie (no mínimos independientes).
+function minCombo(series){
+  const valid=(series||[]).map(function(s){return{kg:parseFloat(s.kg),reps:parseFloat(s.reps)};})
+    .filter(function(s){return !isNaN(s.kg)&&!isNaN(s.reps)&&s.reps>0;});
+  if(!valid.length)return{kg:null,reps:null};
+  let best=valid[0];
+  valid.forEach(function(s){if(s.kg<best.kg||(s.kg===best.kg&&s.reps<best.reps))best=s;});
+  return{kg:best.kg,reps:best.reps};
+}
 function getSessionMinKgAndReps(id){
   const data=state.exData[id]||{};
   const today=localDateISO();
@@ -1505,9 +1557,7 @@ function getSessionMinKgAndReps(id){
   if(!todaySession||!todaySession.series)return{kg:null,reps:null};
   const filled=todaySession.series.filter(function(s){return s.kg!==''&&s.reps!=='';});
   if(filled.length<3)return{kg:null,reps:null};
-  const kgs=filled.map(function(s){return parseFloat(s.kg)||0;});
-  const reps=filled.map(function(s){return parseFloat(s.reps)||0;});
-  return{kg:Math.min(...kgs),reps:Math.min(...reps)};
+  return minCombo(filled.map(function(s){return{kg:parseFloat(s.kg)||0,reps:s.reps};}));
 }
 
 function checkAndUpdateLevel(id){
@@ -1975,7 +2025,7 @@ function importData(event){
       sv('weekData',state.weekData);
       sv('exData',state.exData);
       sv('customEx',customEx);
-      applyCustomEx();
+      applyCustomEx();recomputeMinHistory();
       showToast('Datos restaurados');
       renderSemana();
     }catch(err){
@@ -2034,6 +2084,20 @@ function applyCustomEx(){
   });
 }
 applyCustomEx();
+function recomputeMinHistory(){
+  Object.keys(state.exData).forEach(function(id){
+    const d=state.exData[id];
+    if(!d||!d.levelHistory||!d.sessions)return;
+    d.levelHistory.forEach(function(e){
+      const sess=d.sessions[e.date];
+      if(!sess||!sess.series)return;
+      const c=minCombo(sess.series.filter(function(s){return s.kg!==''&&s.reps!=='';}).map(function(s){return{kg:parseFloat(s.kg)||0,reps:s.reps};}));
+      if(c.kg!==null){e.kg=c.kg;e.reps=c.reps;}
+    });
+  });
+  saveEx();
+}
+recomputeMinHistory();
 
 
 // ============ PROGRESO ============
