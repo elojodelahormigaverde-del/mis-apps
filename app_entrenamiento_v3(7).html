@@ -75,6 +75,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .legend{display:flex;gap:14px;padding:8px 16px 4px;font-size:12px;color:var(--text2);align-items:center}
 .legend-dot{width:8px;height:8px;border-radius:50%}
 .days-card{margin:0 16px 12px}
+.combo-card{margin:8px 16px 4px;padding:14px 14px 6px}
+.combo-title{font-size:14px;font-weight:600;margin-bottom:2px}
+.combo-sub{font-size:12px;color:var(--text2);margin-bottom:8px}
+.combo-row{display:flex;gap:10px;padding:9px 0;border-top:0.5px solid var(--border)}
+.combo-days{flex-shrink:0;width:52px;font-size:13px;font-weight:600;color:var(--fuerza-text);padding-top:3px}
+.combo-body{flex:1;min-width:0}
+.combo-chips{display:flex;flex-wrap:wrap;gap:5px}
+.combo-chip{font-size:12px;padding:4px 9px;border-radius:999px;background:var(--fuerza-bg);color:var(--fuerza-text);border:none;cursor:pointer;font-family:inherit}
+.combo-chip.done{background:var(--green-bg);color:var(--green)}
+.combo-why{font-size:11.5px;color:var(--text2);line-height:1.4;margin-top:5px}
+.combo-ideal{font-size:10.5px;font-weight:600;color:var(--green);margin-top:2px}
 .day-row{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-bottom:0.5px solid var(--border);cursor:pointer}
 .day-row:last-child{border-bottom:none}.day-row:active{background:var(--bg)}
 .day-left{width:34px;flex-shrink:0}
@@ -238,6 +249,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <button onclick="document.getElementById('backup-banner-entreno').style.display='none'" style="background:none;border:none;color:#E65100;font-size:18px;cursor:pointer;flex-shrink:0">×</button>
   </div>
   <div class="obj-grid" id="obj-grid"></div>
+  <div class="card combo-card" id="combo-card"></div>
   <div class="legend">
     <div style="display:flex;align-items:center;gap:5px"><div class="legend-dot" style="background:var(--dot-done)"></div><span>Hecho</span></div>
     <div style="display:flex;align-items:center;gap:5px"><div class="legend-dot" style="background:var(--dot-planned)"></div><span>Previsto</span></div>
@@ -877,7 +889,43 @@ function renderSemana(){
       try{localStorage.setItem('lastBackupReminderEntreno',now);}catch(e){}
     }
   }
-  renderObjectives();renderDays();
+  renderObjectives();renderDays();renderCombos();
+}
+// ============ COMBINACIONES DE GIMNASIO ============
+const COMBOS=[
+  {days:'4 días',ideal:true,ids:['espalda','pecho','full','inf'],why:'Reparto ideal: tren superior con todo el volumen de brazos y glúteo dos veces por semana.'},
+  {days:'3 días',ids:['espalda','pecho','full'],why:'El Full body es fijo: es lo que garantiza el glúteo cada semana.'},
+  {days:'2 días',ids:['sup','full'],why:'Mejor que Espalda + Pecho: con solo dos sesiones, el split deja el glúteo a cero.'}
+];
+const COMBO_LABEL={sup:'Tren superior',inf:'Glúteo',full:'Full body',espalda:'Espalda y bíceps',pecho:'Pecho y tríceps'};
+function doneThisWeek(sid){
+  const act=SESSIONS[sid].activityName;
+  const days=getWeekDays(currentMondayISO());
+  return days.some(function(d){return(state.weekData[d.iso]||[]).some(function(e){
+    if(e.status!=='done')return false;
+    const n=(e.name||'').trim();
+    if(sid==='full')return /^full\s+body/i.test(n)&&!/casa/i.test(n);
+    return n===act;
+  });});
+}
+function renderCombos(){
+  const el=document.getElementById('combo-card');if(!el)return;
+  let html='<div class="combo-title">¿Qué gimnasio hago esta semana?</div><div class="combo-sub">Según los días que tengas. En verde, lo que ya has hecho.</div>';
+  COMBOS.forEach(function(c){
+    html+='<div class="combo-row"><div class="combo-days">'+c.days+(c.ideal?'<div class="combo-ideal">ideal</div>':'')+'</div><div class="combo-body"><div class="combo-chips">'
+      +c.ids.map(function(id){const d=doneThisWeek(id);return'<button class="combo-chip'+(d?' done':'')+'" onclick="openSession(\''+id+'\')">'+(d?'✓ ':'')+COMBO_LABEL[id]+'</button>';}).join('')
+      +'</div><div class="combo-why">'+c.why+'</div></div></div>';
+  });
+  el.innerHTML=html;
+}
+function syncSessionCards(){
+  document.querySelectorAll('#screen-sesiones .session-card').forEach(function(card){
+    const m=(card.getAttribute('onclick')||'').match(/openSession\('([^']+)'\)/);
+    if(!m||!SESSIONS[m[1]])return;
+    const n=card.querySelector('.session-name'),mt=card.querySelector('.session-meta');
+    if(n)n.textContent=SESSIONS[m[1]].title;
+    if(mt)mt.textContent=SESSIONS[m[1]].meta;
+  });
 }
 function renderObjectives(){
   const mon=currentMondayISO();const days=getWeekDays(mon);
@@ -925,14 +973,14 @@ function toggleEntryStatus(iso,idx){
   if(!state.weekData[iso]||!state.weekData[iso][idx])return;
   const e=state.weekData[iso][idx];
   e.status=e.status==='done'?'planned':'done';
-  saveWeek();renderDays();renderObjectives();
+  saveWeek();renderDays();renderObjectives();renderCombos();
   showToast(e.status==='done'?'Marcado como hecho':'Marcado como previsto');
 }
 function deleteWeekEntry(iso,idx){
   if(!state.weekData[iso])return;
   state.weekData[iso].splice(idx,1);
   if(!state.weekData[iso].length)delete state.weekData[iso];
-  saveWeek();renderDays();renderObjectives();
+  saveWeek();renderDays();renderObjectives();renderCombos();
   showToast('Entrada eliminada');
 }
 
@@ -969,7 +1017,7 @@ function saveActivity(){
   if(!name){closeModal();return;}
   if(!state.weekData[mState.iso])state.weekData[mState.iso]=[];
   state.weekData[mState.iso].push({name,cat,status:mState.tab});
-  saveWeek();renderDays();renderObjectives();closeModal();
+  saveWeek();renderDays();renderObjectives();renderCombos();closeModal();
 }
 
 // ============ SESSIONS ============
@@ -2098,6 +2146,7 @@ function recomputeMinHistory(){
   saveEx();
 }
 recomputeMinHistory();
+syncSessionCards();
 
 
 // ============ PROGRESO ============
