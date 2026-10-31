@@ -564,15 +564,62 @@ var CONTEXTOS=[
     {e:'🥩',t:'Proteína'},{e:'🥑',t:'Grasa'},{e:'🥦',t:'Fibra opcional'}
   ],note:'Sin almidón necesario. Estabiliza la glucosa toda la mañana.',
   ejemplos:['3 huevos revueltos + 150g skyr + puñado almendras','200g cottage cheese + frutos rojos + semillas de chía','Tempeh a la plancha + kéfir + pepino y tomate']},
+  {id:'preentreno',label:'Pre-entreno (mañana)',icon:'☕',steps:[
+    {e:'🌾',t:'Glucosa rápida'},{e:'🥩',t:'Proteína opcional'}
+  ],note:'Con el café, 100–200 kcal. La noche antes, el snack junto a la cafetera; las galletas de mi hija, lejos. Sesión suave (yoga): el café solo puede bastar.',
+  ejemplos:['1 plátano — energía rápida, cero preparación','2 dátiles + 4–5 almendras — las bolsitas del domingo','Tortita de arroz + 1 cucharadita de miel o mermelada','Tortita de arroz + plátano machacado','Tortita de arroz + requesón o queso fresco con mermelada','Skyr pequeño con un poco de fruta — suma proteína desde temprano']},
   {id:'postentreno',label:'Post-entreno',icon:'⚡',steps:[
     {e:'🥩',t:'Proteína'},{e:'🌾',t:'Glucosa rápida'}
-  ],note:'Ventana de 60-90 min. Sin grasa — ralentiza la absorción de proteína.',
-  ejemplos:['200g skyr + plátano + 60g avena','3 huevos + tostada espelta','150g tofu + arroz blanco + salsa tamari','200g skyr + 3-4 dátiles — rápido, sin cocción, muy eficaz']},
-  {id:'snack',label:'Snack',icon:'🍎',steps:[
-    {e:'🥩',t:'Proteína'},{e:'🥦',t:'Fibra'}
-  ],note:'Sin almidón. Evita picos entre comidas.',
-  ejemplos:['150g skyr + frutos rojos','Huevo duro + pepino y zanahoria','30g almendras + manzana']}
+  ],note:'Ventana de 60-90 min. Sin grasa — ralentiza la absorción de proteína. El batido es el desayuno, no un extra.',
+  ejemplos:['<b>Batido:</b> 1 cacito de whey + 100–150 g de fruta congelada + agua, leche o leche vegetal sin azúcar','Batido: como mucho un añadido — 1 cucharada de chía o de avena si necesito saciarme más','Después del batido, solo algo pequeño: 1 fruta, 1 tostada o tortita con tomate, o 10–15 almendras','<b>Desayuno oficina:</b> unos 40 g de cereales con skyr o yogur','<b>Desayuno en casa:</b> pan con tomate + huevo, queso o pavo vegetal (30 g de proteína)','200g skyr + plátano + 60g avena','3 huevos + tostada espelta','150g tofu + arroz blanco + salsa tamari','200g skyr + 3-4 dátiles — rápido, sin cocción, muy eficaz']},
+  {id:'snackoficina',label:'Snack en la oficina',icon:'🏢',steps:[
+    {e:'🥩',t:'Proteína o grasa'},{e:'🥦',t:'Fibra'}
+  ],note:'Entre las 16h y las 17h, antes de salir, tenga hambre o no. 150–200 kcal: un snack, no una comida.',
+  ejemplos:['Skyr o yogur natural + fruta (nevera)','Huevo cocido + 1 fruta (nevera)','Hummus o tzatziki + bastones de zanahoria (nevera)','Dátiles + nueces o almendras','Fruta + 15–20 almendras','Tortitas de arroz + queso','Edamame tostado']},
+  {id:'snackcasa',label:'Snack en casa',icon:'🏠',steps:[
+    {e:'🥩',t:'Proteína o grasa'},{e:'🥦',t:'Fibra'}
+  ],note:'Si llego con hambre a pesar de todo: primero una infusión o un caldo caliente, después decido. Los dulces de mi hija, en su armario.',
+  ejemplos:['Cacao puro caliente con leche y canela — reconfortante en invierno','Sopa de miso o caldo de verduras — llena con muy pocas kcal','Skyr + cacao puro + canela — sabor a chocolate con proteína','Verduras crudas + hummus — para la necesidad de picar','Huevo cocido o queso fresco — proteína sin preparar nada']}
 ];
+
+var RACIONES=[
+  {a:'Pasta o arroz',r:'180–200 g cocido (70–80 g en seco) — a ojo: una taza grande'},
+  {a:'Pan',r:'40–60 g por comida (molde: 1–2 rebanadas; hogaza: 1 rebanada mediana)'},
+  {a:'Patata',r:'150–200 g cocida'}
+];
+var RACIONES_NOTAS=['Raciones más generosas los días de fuerza; más ligeras los días de descanso y en la cena','Servido en el plato; nunca la barra de pan en la mesa'];
+var MOMENTO_DULCE=['Un momento dulce al día, decidido de antemano','Mi dulce: dátil + frutos secos, siempre una bolsita en el bolso','Mi momento: después de comer, o por la noche con skyr + cacao puro + canela','Si quiero chocolate: negro 85%, 1–2 onzas servidas en un plato, nunca del paquete','Antojo fuera de mi momento: un vaso de agua y espero 10 minutos'];
+var DOMINGO=['5–6 bolsitas de dátiles con nueces o almendras','Huevos cocidos para la semana','Skyr y yogur natural en la nevera','Verduras lavadas y cortadas','Mis snacks a la vista; los dulces de mi hija en su armario'];
+
+function domingoKey(){var d=new Date();d.setDate(d.getDate()-d.getDay());return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function getDomingo(){var st=ld('domingo');if(!st||st.week!==domingoKey())st={week:domingoKey(),done:[]};return st;}
+function toggleDomingo(i){var st=getDomingo();var k=st.done.indexOf(i);if(k>-1)st.done.splice(k,1);else st.done.push(i);sv('domingo',st);renderFormula();}
+
+function renderReglas(soloRaciones){
+  var card=function(title,body){return'<div style="background:var(--card);border-radius:var(--r);border:0.5px solid var(--border);padding:12px 14px">'
+    +'<div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px">'+title+'</div>'+body+'</div>';};
+  var line=function(t){return'<div style="display:flex;align-items:flex-start;gap:6px;padding:5px 0;border-bottom:0.5px solid var(--border)"><span style="color:var(--green);font-size:13px;flex-shrink:0">›</span><span style="font-size:12px;color:var(--text);line-height:1.5">'+t+'</span></div>';};
+  var rac=RACIONES.map(function(x){
+    return'<div style="display:flex;gap:10px;padding:7px 0;border-bottom:0.5px solid var(--border)">'
+      +'<div style="width:92px;flex-shrink:0;font-size:12px;font-weight:600;color:var(--text)">'+x.a+'</div>'
+      +'<div style="font-size:12px;color:var(--text);line-height:1.5">'+x.r+'</div></div>';
+  }).join('')+'<div style="margin-top:8px;font-size:12px;color:var(--text2);background:var(--bg);border-radius:var(--rs);padding:7px 10px;line-height:1.5">'+RACIONES_NOTAS.join('<br>')+'</div>';
+  var dulce=MOMENTO_DULCE.map(line).join('');
+  var st=getDomingo();
+  var hechos=st.done.length;
+  var dom=DOMINGO.map(function(t,i){
+    var on=st.done.indexOf(i)>-1;
+    return'<button onclick="toggleDomingo('+i+')" aria-pressed="'+on+'" style="width:100%;display:flex;align-items:center;gap:10px;padding:8px 0;border:none;border-bottom:0.5px solid var(--border);background:none;cursor:pointer;text-align:left">'
+      +'<span style="width:20px;height:20px;flex-shrink:0;border-radius:6px;border:1.5px solid '+(on?'var(--green)':'var(--border-med)')+';background:'+(on?'var(--green)':'transparent')+';color:white;font-size:13px;line-height:18px;text-align:center">'+(on?'✓':'')+'</span>'
+      +'<span style="font-size:12px;line-height:1.5;color:'+(on?'var(--text3)':'var(--text)')+';text-decoration:'+(on?'line-through':'none')+'">'+t+'</span></button>';
+  }).join('')+'<div style="margin-top:8px;font-size:11px;color:var(--text3)">'+hechos+' de '+DOMINGO.length+' listos · se reinicia cada domingo</div>';
+  if(soloRaciones)return'<div style="margin-top:14px">'+card('📏 Raciones',rac)+'</div>';
+  return'<div style="margin-top:18px"><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px">📌 Mis reglas</div>'
+    +'<div style="display:flex;flex-direction:column;gap:8px">'
+    +card('🍫 Momento dulce',dulce)
+    +card('🗓️ Cada domingo',dom)
+    +'</div></div>';
+}
 
 var selectedComponent=null;
 
@@ -674,7 +721,7 @@ function renderFormula(){
 
   el.innerHTML='<div style="text-align:center;margin-bottom:14px"><div style="font-size:12px;color:var(--text3);margin-bottom:10px">Toca un sector para ver alimentos</div>'+pieSvg+'</div>'
     +'<div style="display:flex;gap:6px;margin-bottom:2px">'+legend+'</div>'
-    +detail+context
+    +detail+renderReglas(true)+context+renderReglas()
     +'<div style="height:16px"></div>';
 }
 
