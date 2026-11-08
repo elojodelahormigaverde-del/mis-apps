@@ -352,6 +352,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .ex-row.reordering{cursor:default}
 .ex-row.reordering .move-btns{display:flex}
 .reorder-hint{font-size:calc(13px * var(--fs));color:var(--text2);padding:6px 16px 0}
+/* Progress: collapsible groups */
+.prog-toggle{display:flex;justify-content:space-between;align-items:center;width:100%;background:none;border:none;text-align:left;cursor:pointer;min-height:44px;font-family:inherit}
+.prog-toggle .chev{font-size:16px;color:var(--text2);transition:transform .2s}
+.prog-toggle.collapsed .chev{transform:rotate(-90deg)}
+.prog-count{font-weight:400;color:var(--text2)}
+/* Exercise history: load more */
+.hist-more-btn{width:100%;margin-top:6px;min-height:36px;border:1px solid var(--border-med);border-radius:var(--rs);background:var(--card);color:var(--text);font-weight:600;cursor:pointer;font-family:inherit}
+/* Weekly goals: read-only until "Edit goals" is tapped */
+.goal-step button{visibility:hidden}
+#goals-list.editing .goal-step button{visibility:visible}
+.goals-edit-btn{display:flex;justify-content:center;align-items:center;width:calc(100% - 32px);margin:0 16px 16px}
 </style>
 </head>
 <body>
@@ -527,11 +538,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <h3>Logging and progress</h3>
       <p class="rule-p">Log the weight and reps of each set. <b>RIR</b> is how many more reps you could still do: stop with about 2 left in the tank.</p>
       <p class="rule-p">Each time, try to do at least one more rep in total than last time. When all your sets reach the top of the rep range, the app tells you to go up in weight.</p>
+      <p class="rule-p">Start each session with its <b>🔥 Warm-up</b> (about 5 minutes): the button is at the top of the session.</p>
       <p class="rule-p muted">Tried a heavier weight and it didn’t work out? Log it as a <b>test set</b>: it won’t count.</p>
     </div>
     <div class="card rule-card">
       <h3>Progress charts</h3>
-      <p class="rule-p">In <b>Progress</b>, tap an exercise to see its chart. There are three views:</p>
+      <p class="rule-p"><b>Progress</b> only lists the exercises you’ve logged. Tap a session name to fold or unfold it, and tap an exercise to see its chart. There are three views:</p>
       <p class="rule-p"><b>Estimated 1RM:</b> the most weight you could lift once, estimated from your best set of the day. It goes up when you get stronger, even if you change the weight or the reps. Example: 3 kg × 12 reps ≈ 4.2 kg.</p>
       <p class="rule-p"><b>Volume:</b> the total work of the session: weight × reps, added up over all your sets. It goes up when you do more reps or lift more weight.</p>
       <p class="rule-p"><b>Weakest set:</b> the lightest weight you used that day. It goes up once all your sets have moved to a heavier weight.</p>
@@ -644,7 +656,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div id="editor-content" style="display:none">
     <div class="section-label">Weekly goals</div>
     <div style="padding:0 16px 8px;font-size:calc(13px * var(--fs));color:var(--text2)">Sessions per week for each category. 0 = no goal. Strength sessions on the same day count as one.</div>
-    <div class="card" style="margin:0 16px 16px" id="goals-list"></div>
+    <div class="card" style="margin:0 16px 10px" id="goals-list"></div>
+    <button class="btn goals-edit-btn" id="goals-edit-btn" onclick="toggleGoalsEdit()">✎ Edit goals</button>
     <div class="section-label">My activities</div>
     <div style="padding:0 16px 8px;font-size:calc(13px * var(--fs));color:var(--text2)">Add your own activities. They appear when you add an activity to a day.</div>
     <div class="card" style="margin:0 16px 16px;padding:14px">
@@ -800,9 +813,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
   <div id="stretch-list" style="padding:14px 16px;display:flex;flex-direction:column;gap:10px"></div>
   <div style="padding:0 16px 16px">
-    <button class="finish-btn" onclick="showScreen('sesiones')">
+    <button class="finish-btn" id="stretch-done" onclick="showScreen(this.dataset.to||'sesiones')">
       <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-      Done
+      <span id="stretch-done-label">Done</span>
     </button>
   </div>
 </div>
@@ -1752,7 +1765,7 @@ function openSession(id){
   const stWrap=document.getElementById('stretch-btn-wrap');
   if(hasWarmup){
     wuWrap.innerHTML='<button onclick="openWarmup(\''+id+'\')" style="width:100%;padding:12px;border-radius:var(--r);border:0.5px solid var(--border-med);background:var(--card);font-size:calc(14px * var(--fs));font-weight:600;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px">🔥 Warm-up (~5 min)</button>';
-    stWrap.innerHTML='<button onclick="openStretching(\''+id+'\')" style="width:100%;padding:12px;border-radius:var(--r);border:0.5px solid var(--border-med);background:var(--card);font-size:calc(14px * var(--fs));font-weight:600;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px">🧘 Cool-down stretches (~4 min)</button>';
+    stWrap.innerHTML=!STRETCHING[id]?'':'<button onclick="openStretching(\''+id+'\')" style="width:100%;padding:12px;border-radius:var(--r);border:0.5px solid var(--border-med);background:var(--card);font-size:calc(14px * var(--fs));font-weight:600;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px">🧘 Cool-down stretches (~4 min)</button>';
   } else {
     wuWrap.innerHTML='';
     stWrap.innerHTML='';
@@ -1827,6 +1840,7 @@ function openWarmup(sessionId){
   if(!items)return;
   document.querySelector('#screen-stretch .page-title').textContent='🔥 Warm-up';
   document.getElementById('stretch-subtitle').textContent='Before you start · ~5 min';
+  document.getElementById('stretch-done').dataset.to='session';document.getElementById('stretch-done-label').textContent='Start the session';
   document.getElementById('stretch-list').innerHTML=items.map(function(txt,i){
     return'<div class="card" style="padding:14px;display:flex;align-items:center;gap:10px">'
       +'<div style="width:28px;height:28px;border-radius:50%;background:var(--amber-bg);color:var(--amber);display:flex;align-items:center;justify-content:center;font-size:calc(13px * var(--fs));font-weight:600;flex-shrink:0">'+(i+1)+'</div>'
@@ -1839,6 +1853,7 @@ function openStretching(sessionId){
   const stretches=STRETCHING[sessionId];
   if(!stretches)return;
   document.querySelector('#screen-stretch .page-title').textContent='🌬️ Cool-down';
+  document.getElementById('stretch-done').dataset.to='sesiones';document.getElementById('stretch-done-label').textContent='Done';
   document.getElementById('stretch-subtitle').textContent='Final stretches · ~4 min';
   document.getElementById('stretch-list').innerHTML=stretches.map(function(s,i){
     return'<div class="card" style="padding:14px">'
@@ -2178,7 +2193,7 @@ function openExercise(id,origin){
       const seriesStr=seriesSummary(sess.series);
       if(!seriesStr)return;
       const noteRow=sess.notes?'<div style="font-size:calc(12.5px * var(--fs));color:var(--text3);margin-top:2px">📝 '+sess.notes+'</div>':'';
-      histRows+='<div style="padding:6px 0;border-bottom:0.5px solid var(--border)">'
+      histRows+='<!--r--><div style="padding:6px 0;border-bottom:0.5px solid var(--border)">'
         +'<div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:4px">'
         +'<span style="font-size:calc(12.5px * var(--fs));color:var(--text3);flex-shrink:0">'+d+'</span>'
         +'<span style="font-size:calc(12.5px * var(--fs));color:var(--text2)">'+seriesStr+'</span>'
@@ -2189,13 +2204,17 @@ function openExercise(id,origin){
       const lh=(data.levelHistory||[]).filter(function(e){return e.date!==today;}).slice().reverse();
       lh.forEach(function(e){
         if(!e.kg)return;
-        histRows+='<div style="padding:6px 0;border-bottom:0.5px solid var(--border)">'
+        histRows+='<!--r--><div style="padding:6px 0;border-bottom:0.5px solid var(--border)">'
           +'<div style="display:flex;justify-content:space-between;align-items:baseline">'
           +'<span style="font-size:calc(12.5px * var(--fs));color:var(--text3)">'+e.date+'</span>'
           +'<span style="font-size:calc(12.5px * var(--fs));color:var(--text2)">'+e.kg+' kg × '+e.reps+' reps (min.)</span>'
           +'</div></div>';
       });
     }
+    // More than 6 entries: show 6, the rest behind a button
+    const histParts=histRows.split('<!--r-->').filter(Boolean);
+    if(histParts.length>6)histRows=histParts.slice(0,6).join('')+'<div id="ex-hist-more" style="display:none">'+histParts.slice(6).join('')+'</div>'
+      +'<button class="hist-more-btn" onclick="document.getElementById(\'ex-hist-more\').style.display=\'block\';this.remove()">Load more ('+(histParts.length-6)+')</button>';
     if(lastSession&&lastSession.series){
       const combo=minCombo(effSeries(lastSession.series).filter(function(s){return parseFloat(s.kg)>0;}));
       const lastKg=combo.kg;
@@ -2316,7 +2335,12 @@ function saveCurrentExData(){
 // ============ WARM-UP, COOL-DOWN AND LEVELS ============
 // Optional per session, e.g. WARMUP.upper=['...','...'] and STRETCHING.upper=[{name:'...',desc:'...'}].
 // The warm-up and cool-down buttons only appear for sessions listed here.
-const WARMUP={};
+const WARMUP={
+  upper:['2 min marching on the spot, swinging your arms','Shoulder rolls, 10 forward + 10 back (move the shoulders only, keep the neck still)','Arm circles, small to big, 10 each way','Wall push-ups, 10 reps','Wrist circles + open and close your hands, 10 each','1 light set of your first exercise (1 kg or no weight), 10 reps'],
+  lower:['2 min marching on the spot','Hip circles, 10 each way','Good mornings with your hands on your hips, 10 reps','Slow squats to the chair, 8 reps','Calf raises, 10 reps'],
+  abs:['Cat-cow, 8 slow rounds','Pelvic tilts lying on your back, 10 reps','Lying on your back, knees bent: let them fall gently side to side, 8 each side','Bird dog, slow, 4 each side'],
+  functional:['2 min marching on the spot, swinging your arms','Shoulder rolls + arm circles, 10 each','Cat-cow, 6 slow rounds','Hip circles, 10 each way','Slow squats to the chair, 8 reps','Wall push-ups, 8 reps']
+};
 const STRETCHING={};
 // WEIGHT_THRESHOLDS[id] = array of kg values, one per level (null = manual)
 const WEIGHT_THRESHOLDS={
@@ -2603,7 +2627,7 @@ function checkPin(){
   if(pinEntered===EDITOR_PIN){
     document.getElementById('editor-lock').style.display='none';
     document.getElementById('editor-content').style.display='block';
-    renderEditorGoals();renderEditorActs();renderEditorExList();
+    renderEditorGoals();toggleGoalsEdit(false);renderEditorActs();renderEditorExList();
   } else {
     pinEntered='';updatePinDots();
     showToast('PIN incorrecto');
@@ -2650,6 +2674,13 @@ function renderEditorExList(){
 }
 // "3" or "3 kg" -> 3 (so the app can suggest weights); anything else stays as text
 function parseLevels(raw){return raw.split('\n').map(function(s){return s.trim();}).filter(Boolean).map(function(s){const m=s.match(/^(\d+(?:[.,]\d+)?)\s*(kg)?$/i);return m?parseFloat(m[1].replace(',','.')):s;});}
+function toggleGoalsEdit(force){
+  const list=document.getElementById('goals-list'),btn=document.getElementById('goals-edit-btn');
+  const on=force===undefined?!list.classList.contains('editing'):force;
+  if(!on&&list.classList.contains('editing'))showToast('Goals saved');
+  list.classList.toggle('editing',on);
+  btn.textContent=on?'Done':'✎ Edit goals';btn.classList.toggle('btn-primary',on);
+}
 function renderEditorGoals(){
   document.getElementById('goals-list').innerHTML=CATS.map(function(c){
     return'<div class="goal-row"><span style="font-size:calc(14px * var(--fs))">'+c.label+'</span><div class="goal-step">'
@@ -3013,17 +3044,26 @@ syncSessionCards();
 
 
 // ============ PROGRESO ============
+// An exercise appears in Progress only once something has been logged
+function exHasLog(id){
+  const d=state.exData[id];if(!d)return false;
+  if(d.sessions&&Object.keys(d.sessions).some(function(k){return(d.sessions[k].series||[]).some(function(s){return(s.kg&&s.kg!=='')||(s.reps&&s.reps!=='');});}))return true;
+  return!!(d.levelHistory&&d.levelHistory.length);
+}
+function toggleProgGroup(sid){const c=ld('progCollapsed')||{};c[sid]=!c[sid];sv('progCollapsed',c);renderProgreso();}
 function renderProgreso(){
   const allEx={...EX,...customEx};
   const sessions=Object.keys(SESSIONS).map(function(sid){
     const ids=[];
     SESSIONS[sid].blocks.forEach(function(b){b.exercises.forEach(function(e){if(ids.indexOf(e)<0)ids.push(e);});});
-    return{label:SESSIONS[sid].title,ids:ids,isDeleted:!!SESSIONS[sid].isDeleted};
+    return{sid:sid,label:SESSIONS[sid].title,ids:ids.filter(exHasLog),isDeleted:!!SESSIONS[sid].isDeleted};
   });
+  const collapsed=ld('progCollapsed')||{};
   let html='',sugHtml='';const sugSeen={};
   sessions.forEach(s=>{
     if(!s.ids.length)return;
-    html+='<div class="prog-session-label">'+s.label+'</div><div class="card prog-card">';
+    const closed=!!collapsed[s.sid];
+    html+='<button class="prog-session-label prog-toggle'+(closed?' collapsed':'')+'" onclick="toggleProgGroup(\''+s.sid+'\')" aria-expanded="'+(!closed)+'"><span>'+s.label+' <span class="prog-count">('+s.ids.length+')</span></span><span class="chev">▾</span></button><div class="card prog-card"'+(closed?' style="display:none"':'')+'>';
     s.ids.forEach(id=>{
       const ex=allEx[id];if(!ex)return;
       const data=state.exData[id]||{};
@@ -3041,7 +3081,8 @@ function renderProgreso(){
     });
     html+='</div>';
   });
-  document.getElementById('prog-content').innerHTML=runWeeklyChart()+(sugHtml?'<div class="section-label">Suggestions</div>'+sugHtml:'')+html;
+  if(!html)html='<div class="card" style="margin:12px 16px;padding:20px 16px;text-align:center;color:var(--text2)">Nothing logged yet. Your exercises appear here once you’ve logged a session.</div>';
+  document.getElementById('prog-content').innerHTML=runWeeklyChart()+html; // suggestions no longer shown here (still in each exercise's Next step)
 }
 
 // ============ NAV ============

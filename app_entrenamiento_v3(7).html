@@ -278,6 +278,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .hist-day-edit{display:flex;align-items:center;justify-content:space-between;gap:6px}
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--text);color:white;padding:10px 20px;border-radius:20px;font-size:14px;font-weight:500;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1}
+/* Progress: collapsible groups */
+.prog-toggle{display:flex;justify-content:space-between;align-items:center;width:100%;background:none;border:none;text-align:left;cursor:pointer;min-height:44px;font-family:inherit}
+.prog-toggle .chev{font-size:16px;color:var(--text2);transition:transform .2s}
+.prog-toggle.collapsed .chev{transform:rotate(-90deg)}
+.prog-count{font-weight:400;color:var(--text2)}
+/* Exercise history: load more */
+.hist-more-btn{width:100%;margin-top:6px;min-height:36px;border:1px solid var(--border-med);border-radius:var(--rs);background:var(--card);color:var(--text);font-weight:600;cursor:pointer;font-family:inherit}
+/* Warm-up table */
+.warmup-card{margin:0 16px 8px;padding:10px 12px;border-radius:var(--rs);background:var(--amber-bg);color:var(--text)}
+.warmup-title{font-weight:700;color:var(--amber);margin-bottom:4px}
+.warmup-table{width:100%;border-collapse:collapse}
+.warmup-table td{padding:5px 0;border-top:0.5px solid rgba(0,0,0,.12)}
+.warmup-table td:last-child{text-align:right;font-weight:600}
+.warmup-note{color:var(--text2);margin-top:4px}
+/* Weekly goals: read-only until "Edit goals" is tapped */
+.goal-step button{visibility:hidden}
+#goals-list.editing .goal-step button{visibility:visible}
+.goals-edit-btn{display:flex;justify-content:center;align-items:center;width:calc(100% - 32px);margin:0 16px 16px}
 </style>
 </head>
 <body>
@@ -304,7 +322,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div><div class="racha-num" id="racha-num">0 semanas</div><div class="racha-text">de racha consecutiva</div></div>
   </div>
   <!-- Cambiar esta fecha en cada nueva versión -->
-  <div style="text-align:center;font-size:11px;color:var(--text3);padding:0 16px 18px">App actualizada el 7 nov 2026</div>
+  <div style="text-align:center;font-size:11px;color:var(--text3);padding:0 16px 18px">App actualizada el 8 nov 2026</div>
 </div>
 
 <!-- SESIONES -->
@@ -502,9 +520,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
   </div>
   <div id="editor-content" style="display:none">
-    <div class="section-label">Objetivos semanales</div>
-    <div style="padding:0 16px 8px;font-size:13px;color:var(--text2)">Mínimo de sesiones por semana. 0 = sin objetivo. Las sesiones de fuerza del mismo día cuentan como una. Fisio no cuenta para la racha.</div>
-    <div class="card" style="margin:0 16px 16px" id="goals-list"></div>
     <div class="section-label">Mis actividades</div>
     <div style="padding:0 16px 8px;font-size:13px;color:var(--text2)">Añade tus propias actividades. Aparecen al añadir una actividad a un día.</div>
     <div class="card" style="margin:0 16px 16px;padding:14px">
@@ -591,6 +606,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         </label>
       </div>
     </div>
+    <div class="section-label">Objetivos semanales</div>
+    <div style="padding:0 16px 8px;font-size:13px;color:var(--text2)">Mínimo de sesiones por semana. 0 = sin objetivo. Las sesiones de fuerza del mismo día cuentan como una. Fisio no cuenta para la racha.</div>
+    <div class="card" style="margin:0 16px 10px" id="goals-list"></div>
+    <button class="btn goals-edit-btn" id="goals-edit-btn" onclick="toggleGoalsEdit()">✎ Editar objetivos</button>
     <div style="padding:0 16px 16px;text-align:center">
       <button class="btn" onclick="lockEditor()" style="width:100%">🔒 Cerrar panel</button>
     </div>
@@ -1385,13 +1404,17 @@ function toggleSerieTest(btn){
   renumberSeries();saveCurrentExData();
   showToast(t?'Serie normal':'Marcada como test — no cuenta en el análisis');
 }
+// Resumen compacto para que quepa en una línea: series seguidas con el mismo peso se agrupan
+// Ej.: "22.5kg: 12r 11r · 20kg: 10r 10r"
 function seriesSummary(series){
-  let n=0;
-  return(series||[]).map(function(s){
-    if((!s.kg||s.kg==='')&&(!s.reps||s.reps===''))return null;
-    if(s.test)return'<span class="serie-tag">test</span> '+(s.kg||'—')+'×'+(s.reps||'—');
-    return'S'+(++n)+': '+(s.kg||'—')+' kg × '+(s.reps||'—')+' reps';
-  }).filter(Boolean).join(' · ');
+  const parts=[];let cur=null;
+  (series||[]).forEach(function(s){
+    if((!s.kg||s.kg==='')&&(!s.reps||s.reps===''))return;
+    const kg=s.kg||'—',r=(s.reps||'—')+'r';
+    if(s.test){parts.push('<span class="serie-tag">test</span> '+kg+'kg '+r);cur=null;return;}
+    if(cur&&cur.kg===kg)cur.reps.push(r);else{cur={kg:kg,reps:[r]};parts.push(cur);}
+  });
+  return parts.map(function(p){return typeof p==='string'?p:p.kg+'kg: '+p.reps.join(' ');}).join(' · ');
 }
 
 // ============ v3.9 · PRÓXIMO PASO (doble progresión) ============
@@ -1612,10 +1635,10 @@ function openExercise(id,origin){
       const seriesStr=seriesSummary(sess.series);
       if(!seriesStr)return;
       const noteRow=sess.notes?'<div style="font-size:11px;color:var(--text3);margin-top:2px">📝 '+sess.notes+'</div>':'';
-      histRows+='<div style="padding:6px 0;border-bottom:0.5px solid var(--border)">'
-        +'<div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:4px">'
-        +'<span style="font-size:11px;color:var(--text3);flex-shrink:0">'+d+'</span>'
-        +'<span style="font-size:12px;color:var(--text2)">'+seriesStr+'</span>'
+      histRows+='<!--r--><div style="padding:6px 0;border-bottom:0.5px solid var(--border)">'
+        +'<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">'
+        +'<span style="font-size:11px;color:var(--text3);flex-shrink:0">'+d.slice(8,10)+'/'+d.slice(5,7)+'</span>'
+        +'<span style="font-size:12px;color:var(--text2);text-align:right">'+seriesStr+'</span>'
         +'</div>'+noteRow+'</div>';
     });
     // Fallback: use levelHistory if no sessions data
@@ -1623,13 +1646,17 @@ function openExercise(id,origin){
       const lh=(data.levelHistory||[]).filter(function(e){return e.date!==today;}).slice().reverse();
       lh.forEach(function(e){
         if(!e.kg)return;
-        histRows+='<div style="padding:6px 0;border-bottom:0.5px solid var(--border)">'
+        histRows+='<!--r--><div style="padding:6px 0;border-bottom:0.5px solid var(--border)">'
           +'<div style="display:flex;justify-content:space-between;align-items:baseline">'
           +'<span style="font-size:11px;color:var(--text3)">'+e.date+'</span>'
-          +'<span style="font-size:12px;color:var(--text2)">'+e.kg+' kg × '+e.reps+' reps (mín.)</span>'
+          +'<span style="font-size:12px;color:var(--text2)">'+e.kg+'kg×'+e.reps+'r (mín.)</span>'
           +'</div></div>';
       });
     }
+    // More than 6 entries: show 6, the rest behind a button
+    const histParts=histRows.split('<!--r-->').filter(Boolean);
+    if(histParts.length>6)histRows=histParts.slice(0,6).join('')+'<div id="ex-hist-more" style="display:none">'+histParts.slice(6).join('')+'</div>'
+      +'<button class="hist-more-btn" onclick="document.getElementById(\'ex-hist-more\').style.display=\'block\';this.remove()">Ver más ('+(histParts.length-6)+')</button>';
     if(lastSession&&lastSession.series){
       const combo=minCombo(effSeries(lastSession.series).filter(function(s){return parseFloat(s.kg)>0;}));
       const lastKg=combo.kg;
@@ -2209,7 +2236,7 @@ function checkPin(){
   if(pinEntered===EDITOR_PIN){
     document.getElementById('editor-lock').style.display='none';
     document.getElementById('editor-content').style.display='block';
-    renderEditorGoals();renderEditorActs();renderEditorExList();
+    renderEditorGoals();toggleGoalsEdit(false);renderEditorActs();renderEditorExList();
   } else {
     pinEntered='';updatePinDots();
     showToast('PIN incorrecto');
@@ -2267,6 +2294,13 @@ function setCore(sid,id,on){
 function applyCoreOverrides(){Object.keys(coreOverrides).forEach(function(sid){if(SESSIONS[sid])SESSIONS[sid].coreExercises=coreOverrides[sid].slice();});}
 // ---- Objetivos y actividades propias
 const CAT_OPTS=[['movilidad','Movilidad'],['fuerza','Fuerza'],['cardio','Cardio'],['funcional','Funcional'],['fisio','Fisio']];
+function toggleGoalsEdit(force){
+  const list=document.getElementById('goals-list'),btn=document.getElementById('goals-edit-btn');
+  const on=force===undefined?!list.classList.contains('editing'):force;
+  if(!on&&list.classList.contains('editing'))showToast('Objetivos guardados');
+  list.classList.toggle('editing',on);
+  btn.textContent=on?'Hecho':'✎ Editar objetivos';btn.classList.toggle('btn-primary',on);
+}
 function renderEditorGoals(){
   document.getElementById('goals-list').innerHTML=GOAL_DEFS.map(function(d){
     return'<div class="goal-row"><span style="font-size:14px">'+d.label+(d.streak?'':' <span style="font-size:11px;color:var(--text3)">(no cuenta para la racha)</span>')+'</span><div class="goal-step">'
@@ -2588,17 +2622,26 @@ syncSessionCards();
 
 
 // ============ PROGRESO ============
+// An exercise appears in Progress only once something has been logged
+function exHasLog(id){
+  const d=state.exData[id];if(!d)return false;
+  if(d.sessions&&Object.keys(d.sessions).some(function(k){return(d.sessions[k].series||[]).some(function(s){return(s.kg&&s.kg!=='')||(s.reps&&s.reps!=='');});}))return true;
+  return!!(d.levelHistory&&d.levelHistory.length);
+}
+function toggleProgGroup(sid){const c=ld('entreno_progCollapsed')||{};c[sid]=!c[sid];sv('entreno_progCollapsed',c);renderProgreso();}
 function renderProgreso(){
   const allEx={...EX,...customEx};
   const sessions=Object.keys(SESSIONS).map(function(sid){
     const ids=[];
     SESSIONS[sid].blocks.forEach(function(b){b.exercises.forEach(function(e){if(ids.indexOf(e)<0)ids.push(e);});});
-    return{label:SESSIONS[sid].title,ids:ids,isDeleted:!!SESSIONS[sid].isDeleted};
+    return{sid:sid,label:SESSIONS[sid].title,ids:ids.filter(exHasLog),isDeleted:!!SESSIONS[sid].isDeleted};
   });
+  const collapsed=ld('entreno_progCollapsed')||{};
   let html='',sugHtml='';const sugSeen={};
   sessions.forEach(s=>{
     if(!s.ids.length)return;
-    html+='<div class="prog-session-label">'+s.label+'</div><div class="card prog-card">';
+    const closed=!!collapsed[s.sid];
+    html+='<button class="prog-session-label prog-toggle'+(closed?' collapsed':'')+'" onclick="toggleProgGroup(\''+s.sid+'\')" aria-expanded="'+(!closed)+'"><span>'+s.label+' <span class="prog-count">('+s.ids.length+')</span></span><span class="chev">▾</span></button><div class="card prog-card"'+(closed?' style="display:none"':'')+'>';
     s.ids.forEach(id=>{
       const ex=allEx[id];if(!ex)return;
       const data=state.exData[id]||{};
@@ -2616,7 +2659,8 @@ function renderProgreso(){
     });
     html+='</div>';
   });
-  document.getElementById('prog-content').innerHTML=(sugHtml?'<div class="section-label">Sugerencias</div>'+sugHtml:'')+html;
+  if(!html)html='<div class="card" style="margin:12px 16px;padding:20px 16px;text-align:center;color:var(--text2)">Aún no hay registros. Los ejercicios aparecen aquí cuando registras una sesión.</div>';
+  document.getElementById('prog-content').innerHTML=html; // sugerencias ya no se muestran aquí (siguen en el Próximo paso de cada ejercicio)
 }
 
 // ============ NAV ============
