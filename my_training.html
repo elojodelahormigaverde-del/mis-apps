@@ -363,6 +363,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .goal-step button{visibility:hidden}
 #goals-list.editing .goal-step button{visibility:visible}
 .goals-edit-btn{display:flex;justify-content:center;align-items:center;width:calc(100% - 32px);margin:0 16px 16px}
+/* Warm-up sets (W) */
+.serie-row.warm .serie-input{border-style:dashed;border-color:#7FB2E5;background:#EAF3FC;color:#185FA5}
+.serie-row.warm .serie-num{color:#185FA5;font-weight:700}
+.serie-tag.warm{background:#EAF3FC;color:#185FA5}
 </style>
 </head>
 <body>
@@ -393,7 +397,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div><div class="racha-num" id="racha-num">0 weeks</div><div class="racha-text">in a row</div></div>
   </div>
   <!-- Update this date with each new version -->
-  <div style="text-align:center;font-size:calc(12.5px * var(--fs));color:var(--text3);padding:0 16px 18px">App updated 8 Nov 2026</div>
+  <div style="text-align:center;font-size:calc(12.5px * var(--fs));color:var(--text3);padding:0 16px 18px">App updated 11 Nov 2026</div>
 </div>
 
 <!-- SESSIONS -->
@@ -475,6 +479,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="svg-container" id="ex-svg-wrap"></div>
   <div id="ex-alerts-wrap" style="padding:0 16px 10px;display:flex;flex-direction:column;gap:6px"></div>
   <div class="card ex-info-card">
+    <div class="info-row"><span class="info-label">Muscles</span><span class="info-val" id="ex-muscles" style="text-align:right">—</span></div>
     <div class="info-row"><span class="info-label">Rep range</span><span class="info-val" id="ex-sets">—</span></div>
     <div class="info-row"><span class="info-label">RIR</span><span class="info-val" id="ex-rir">—</span></div>
     <div class="info-row"><span class="info-label">Tempo</span><span class="info-val" id="ex-tempo">—</span></div>
@@ -532,6 +537,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <li><b>After week 8:</b> you move to <b>My plan</b>. It starts from what you did in week 8, and each new week suggests the same as the week before. Change it with <b>Edit my plan</b>.</li>
       </ul>
       <p class="rule-p"><b>Change week</b> lets you jump to any week at any time. Your past runs always stay in your history.</p>
+      <p class="rule-p">Before each run, do the <b>🔥 Warm-up</b> at the top of the Running screen: 3 quick moves, about 3 minutes.</p>
       <p class="rule-p muted"><b>▶ Timer</b> tells you when to run and when to walk, with a beep and a voice. Keep the screen on and the sound up. At the end, it opens the log for you.</p>
     </div>
     <div class="card rule-card">
@@ -539,7 +545,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <p class="rule-p">Log the weight and reps of each set. <b>RIR</b> is how many more reps you could still do: stop with about 2 left in the tank.</p>
       <p class="rule-p">Each time, try to do at least one more rep in total than last time. When all your sets reach the top of the rep range, the app tells you to go up in weight.</p>
       <p class="rule-p">Start each session with its <b>🔥 Warm-up</b> (about 5 minutes): the button is at the top of the session.</p>
-      <p class="rule-p muted">Tried a heavier weight and it didn’t work out? Log it as a <b>test set</b>: it won’t count.</p>
+      <p class="rule-p muted">Tap a set number once to mark it as a <b>warm-up</b> set (W), twice for a <b>test</b> set (T): a heavier weight you tried that didn’t work out. Neither counts towards your progress.</p>
     </div>
     <div class="card rule-card">
       <h3>Progress charts</h3>
@@ -807,7 +813,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <!-- STRETCHING SCREEN -->
 <div id="screen-stretch" class="screen">
   <div class="page-header">
-    <button class="back-btn" onclick="showScreen('session')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Session</button>
+    <button class="back-btn" id="stretch-back" onclick="showScreen(this.dataset.to||'session')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg><span id="stretch-back-label">Session</span></button>
     <div class="page-title">🌬️ Cool-down</div>
     <div class="page-sub" id="stretch-subtitle">Final stretches · 3-5 min</div>
   </div>
@@ -1195,6 +1201,8 @@ function renderRunning(){
   }
   const cb=comebackSuggestion();
   if(cb)h+='<div class="run-banner">It’s been '+Math.floor(cb.days/7)+' weeks since your last run. We suggest going back to <b>week '+cb.target+'</b> and building up again.<div class="row"><button class="btn btn-primary" onclick="setRunWeek('+cb.target+',true)">Go to week '+cb.target+'</button><button class="btn" onclick="dismissComeback()">Keep '+weekLabel(run.week).toLowerCase()+'</button></div></div>';
+  // warm-up before running
+  h+='<div style="padding:12px 16px 0"><button class="btn" style="width:100%;justify-content:center;font-weight:600" onclick="openWarmup(\'running\')">🔥 Warm-up before you run (~3 min)</button></div>';
   // runs
   if(!runs.length){
     h+='<div class="card" style="margin:12px 16px;padding:20px;text-align:center;color:var(--text2)">No runs in your plan yet.<br><button class="btn" style="margin-top:12px;width:100%" onclick="openMyPlan()">Set up my plan</button></div>';
@@ -1840,7 +1848,10 @@ function openWarmup(sessionId){
   if(!items)return;
   document.querySelector('#screen-stretch .page-title').textContent='🔥 Warm-up';
   document.getElementById('stretch-subtitle').textContent='Before you start · ~5 min';
-  document.getElementById('stretch-done').dataset.to='session';document.getElementById('stretch-done-label').textContent='Start the session';
+  const isRun=sessionId==='running';
+  document.getElementById('stretch-subtitle').textContent=isRun?'Before you run · ~3 min':'Before you start · ~5 min';
+  document.getElementById('stretch-back').dataset.to=isRun?'running':'session';document.getElementById('stretch-back-label').textContent=isRun?'Running':'Session';
+  document.getElementById('stretch-done').dataset.to=isRun?'running':'session';document.getElementById('stretch-done-label').textContent=isRun?'Start running':'Start the session';
   document.getElementById('stretch-list').innerHTML=items.map(function(txt,i){
     return'<div class="card" style="padding:14px;display:flex;align-items:center;gap:10px">'
       +'<div style="width:28px;height:28px;border-radius:50%;background:var(--amber-bg);color:var(--amber);display:flex;align-items:center;justify-content:center;font-size:calc(13px * var(--fs));font-weight:600;flex-shrink:0">'+(i+1)+'</div>'
@@ -1854,6 +1865,7 @@ function openStretching(sessionId){
   if(!stretches)return;
   document.querySelector('#screen-stretch .page-title').textContent='🌬️ Cool-down';
   document.getElementById('stretch-done').dataset.to='sesiones';document.getElementById('stretch-done-label').textContent='Done';
+  document.getElementById('stretch-back').dataset.to='session';document.getElementById('stretch-back-label').textContent='Session';
   document.getElementById('stretch-subtitle').textContent='Final stretches · ~4 min';
   document.getElementById('stretch-list').innerHTML=stretches.map(function(s,i){
     return'<div class="card" style="padding:14px">'
@@ -1870,7 +1882,8 @@ function openStretching(sessionId){
 
 // ============ WORKING SETS / TEST SETS ============
 // A test set ({test:true}) is saved but doesn't count for levels, charts or suggestions.
-function effSeries(series){return(series||[]).filter(function(s){return s&&!s.test;});}
+// Only normal sets count: warm-up (warmup:true) and test (test:true) sets are kept but never analysed
+function effSeries(series){return(series||[]).filter(function(s){return s&&!s.test&&!s.warmup;});}
 function numSeries(series){
   return effSeries(series).map(function(s){return{kg:parseFloat(s.kg),reps:parseFloat(s.reps)};})
     .filter(function(s){return!isNaN(s.reps)&&s.reps>0;});
@@ -1881,27 +1894,28 @@ function parseRange(sets){
   const after=String(sets).slice(String(sets).indexOf(m[0])+m[0].length).trim();
   return{min:+m[1],max:+m[2],secs:/^s\b|^s$|^seg|^sec/.test(after)};
 }
-function serieRowHTML(s,i,isTest){
-  const n=isTest?'T':'';
-  return'<div class="serie-row'+(isTest?' test':'')+'" data-test="'+(isTest?1:0)+'">'
-    +'<button type="button" class="serie-num" onclick="toggleSerieTest(this)" title="Tap to mark as a test set">'+n+'</button>'
+function serieRowHTML(s,i,kind){
+  if(kind===true)kind='t';kind=kind||''; // '' normal · 'w' warm-up · 't' test
+  const n=kind==='t'?'T':kind==='w'?'W':'';
+  return'<div class="serie-row'+(kind==='t'?' test':kind==='w'?' warm':'')+'" data-test="'+(kind?1:0)+'" data-kind="'+kind+'">'
+    +'<button type="button" class="serie-num" onclick="toggleSerieTest(this)" title="Tap once: warm-up · twice: test">'+n+'</button>'
     +'<div class="serie-input-wrap"><div class="serie-input-group"><div class="serie-input-label">kg</div><input type="number" inputmode="decimal" class="serie-input kg-in" value="'+(s.kg||'')+'" placeholder="—" oninput="saveCurrentExData()" onchange="autofillSeries(\'kg\',this)"></div>'
     +'<div class="serie-input-group"><div class="serie-input-label">reps</div><input type="number" inputmode="numeric" class="serie-input reps-in" value="'+(s.reps||'')+'" placeholder="—" oninput="saveCurrentExData()" onchange="autofillSeries(\'reps\',this)"></div></div>'
-    +(isTest||i>=3?'<button type="button" class="serie-del" onclick="deleteSerieRow(this)" aria-label="Delete set">×</button>':'')
+    +(kind||i>=3?'<button type="button" class="serie-del" onclick="deleteSerieRow(this)" aria-label="Delete set">×</button>':'')
     +'</div>';
 }
 function renderSeriesInputs(series){
   let rows=(series&&series.length?series:[]).slice();
   // Always at least 3 normal sets
-  let normals=rows.filter(function(s){return!s.test;}).length;
+  let normals=rows.filter(function(s){return!s.test&&!s.warmup;}).length;
   while(normals<3){rows.push({kg:'',reps:''});normals++;}
   let ni=0;
-  const html=rows.map(function(s){const t=!!s.test;const idx=t?0:ni++;return serieRowHTML(s,idx,t);}).join('');
+  const html=rows.map(function(s){const k=s.warmup?'w':s.test?'t':'';const idx=k?0:ni++;return serieRowHTML(s,idx,k);}).join('');
   const box=document.getElementById('series-inputs');box.removeAttribute('data-ex');
   box.innerHTML=html
     +'<div id="serie-total" class="serie-total"></div>'
     +'<div class="serie-add-row"><button type="button" class="serie-add" onclick="addSerieRow(false)">+ Set</button><button type="button" class="serie-add test" onclick="addSerieRow(true)">+ Test set</button></div>'
-    +'<div class="serie-hint">Test sets don’t count towards your progress. Tap a set number to mark it as a test set.</div>';
+    +'<div class="serie-hint">Tap a set number: once = warm-up (W), twice = test (T). Neither counts towards your progress.</div>';
   box.setAttribute('data-ex',state.currentExercise);
   renumberSeries();updateSerieTotal();
 }
@@ -1946,7 +1960,8 @@ function renumberSeries(){
   let n=0;
   document.querySelectorAll('#series-inputs .serie-row').forEach(function(r){
     const b=r.querySelector('.serie-num');
-    if(r.getAttribute('data-test')==='1')b.textContent='T';else b.textContent=++n;
+    const k=r.getAttribute('data-kind');
+    if(r.getAttribute('data-test')==='1')b.textContent=k==='w'?'W':'T';else b.textContent=++n;
   });
 }
 function addSerieRow(isTest){
@@ -1960,17 +1975,23 @@ function addSerieRow(isTest){
   const inp=row.querySelector('.kg-in');if(inp)inp.focus();
 }
 function deleteSerieRow(btn){btn.closest('.serie-row').remove();renumberSeries();saveCurrentExData();}
+// Tap the set number: normal → warm-up (W) → test (T) → normal
 function toggleSerieTest(btn){
-  const r=btn.closest('.serie-row');const t=r.getAttribute('data-test')==='1';
-  r.setAttribute('data-test',t?0:1);r.classList.toggle('test',!t);
+  const r=btn.closest('.serie-row');const k=r.getAttribute('data-kind')||(r.getAttribute('data-test')==='1'?'t':'');
+  const next=k===''?'w':k==='w'?'t':'';
+  r.setAttribute('data-kind',next);r.setAttribute('data-test',next?1:0);
+  r.classList.toggle('warm',next==='w');r.classList.toggle('test',next==='t');
+  // warm-up sets go to the top, before the first set that isn't a warm-up
+  if(next==='w'){const first=Array.prototype.find.call(r.parentNode.querySelectorAll('.serie-row'),function(x){return x!==r&&x.getAttribute('data-kind')!=='w';});if(first&&first.compareDocumentPosition(r)&Node.DOCUMENT_POSITION_FOLLOWING)first.before(r);}
   renumberSeries();saveCurrentExData();
-  showToast(t?'Normal set':'Marked as test set: doesn’t count towards progress');
+  showToast(next==='w'?'Warm-up set: doesn’t count towards progress':next==='t'?'Test set: doesn’t count towards progress':'Normal set');
 }
 function seriesSummary(series){
   let n=0;
   return(series||[]).map(function(s){
     if((!s.kg||s.kg==='')&&(!s.reps||s.reps===''))return null;
     if(s.test)return'<span class="serie-tag">test</span> '+(s.kg||'—')+'×'+(s.reps||'—');
+    if(s.warmup)return'<span class="serie-tag warm">W</span> '+(s.kg||'—')+'×'+(s.reps||'—');
     return'S'+(++n)+': '+(s.kg||'—')+' kg × '+(s.reps||'—')+' reps';
   }).filter(Boolean).join(' · ');
 }
@@ -2067,6 +2088,7 @@ function openExercise(id,origin){
   document.getElementById('ex-back-label').textContent=backLabel;
   document.getElementById('ex-title').textContent=ex.name;
   document.getElementById('ex-zone').textContent=ex.zone;
+  document.getElementById('ex-muscles').textContent=ex.zone||'—';
   document.getElementById('ex-sets').textContent=ex.sets;
   document.getElementById('ex-rir').textContent=ex.rir||'—';
   document.getElementById('ex-tempo').textContent=ex.tempo;
@@ -2184,59 +2206,28 @@ function openExercise(id,origin){
 
   const refWrap=document.getElementById('ex-last-ref');
   if(refWrap){
-    // Build history from sessions data
-    const allDates=(data.sessions?Object.keys(data.sessions).filter(function(d){return d!==today;}):[]). sort().reverse();
-    let histRows='';
+    // History, newest first. The first line is always visible (in full); the rest opens below, 6 at a time.
+    const allDates=(data.sessions?Object.keys(data.sessions).filter(function(d){return d!==today;}):[]).sort().reverse();
+    const hist=[];
     allDates.forEach(function(d){
-      const sess=data.sessions[d];
-      if(!sess||!sess.series)return;
-      const seriesStr=seriesSummary(sess.series);
-      if(!seriesStr)return;
-      const noteRow=sess.notes?'<div style="font-size:calc(12.5px * var(--fs));color:var(--text3);margin-top:2px">📝 '+sess.notes+'</div>':'';
-      histRows+='<!--r--><div style="padding:6px 0;border-bottom:0.5px solid var(--border)">'
-        +'<div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:4px">'
-        +'<span style="font-size:calc(12.5px * var(--fs));color:var(--text3);flex-shrink:0">'+d+'</span>'
-        +'<span style="font-size:calc(12.5px * var(--fs));color:var(--text2)">'+seriesStr+'</span>'
-        +'</div>'+noteRow+'</div>';
+      const sess=data.sessions[d];if(!sess||!sess.series)return;
+      const s=seriesSummary(sess.series);if(!s)return;
+      hist.push({d:d,s:s,n:sess.notes||''});
     });
-    // Fallback: use levelHistory if no sessions data
-    if(!histRows&&data.levelHistory&&data.levelHistory.length){
-      const lh=(data.levelHistory||[]).filter(function(e){return e.date!==today;}).slice().reverse();
-      lh.forEach(function(e){
-        if(!e.kg)return;
-        histRows+='<!--r--><div style="padding:6px 0;border-bottom:0.5px solid var(--border)">'
-          +'<div style="display:flex;justify-content:space-between;align-items:baseline">'
-          +'<span style="font-size:calc(12.5px * var(--fs));color:var(--text3)">'+e.date+'</span>'
-          +'<span style="font-size:calc(12.5px * var(--fs));color:var(--text2)">'+e.kg+' kg × '+e.reps+' reps (min.)</span>'
-          +'</div></div>';
-      });
+    if(!hist.length&&data.levelHistory&&data.levelHistory.length){
+      (data.levelHistory||[]).filter(function(e){return e.date!==today&&e.kg;}).slice().reverse()
+        .forEach(function(e){hist.push({d:e.date,s:e.kg+' kg × '+e.reps+' reps (min.)',n:''});});
     }
-    // More than 6 entries: show 6, the rest behind a button
-    const histParts=histRows.split('<!--r-->').filter(Boolean);
-    if(histParts.length>6)histRows=histParts.slice(0,6).join('')+'<div id="ex-hist-more" style="display:none">'+histParts.slice(6).join('')+'</div>'
-      +'<button class="hist-more-btn" onclick="document.getElementById(\'ex-hist-more\').style.display=\'block\';this.remove()">Load more ('+(histParts.length-6)+')</button>';
-    if(lastSession&&lastSession.series){
-      const combo=minCombo(effSeries(lastSession.series).filter(function(s){return parseFloat(s.kg)>0;}));
-      const lastKg=combo.kg;
-      const lastReps=combo.reps;
-      const summaryKg=lastKg?(lastKg+' kg'+(lastReps?' × '+lastReps+' reps':'')):'—';
-      const histSection=histRows
-        ?'<div id="ex-hist-detail" style="display:none;margin-top:8px;border-top:0.5px solid var(--border);padding-top:4px">'+histRows+'</div>'
-        +'<button onclick="var d=document.getElementById(\'ex-hist-detail\');var b=document.getElementById(\'ex-hist-btn\');if(d.style.display===\'none\'){d.style.display=\'block\';b.textContent=\'▲ Hide history\';}else{d.style.display=\'none\';b.textContent=\'▼ Show full history\';}" id="ex-hist-btn" style="font-size:calc(12.5px * var(--fs));color:var(--blue);background:none;border:none;cursor:pointer;margin-top:6px;padding:0">▼ Show full history</button>':'';
+    if(hist.length){
+      const rest=hist.slice(1);
+      let detail=rest.slice(0,6).map(histRowHTML).join('');
+      if(rest.length>6)detail+='<div id="ex-hist-more" style="display:none">'+rest.slice(6).map(histRowHTML).join('')+'</div>'
+        +'<button class="hist-more-btn" id="ex-hist-more-btn" data-n="'+(rest.length-6)+'" onclick="toggleHistMore()">Load more ('+(rest.length-6)+')</button>';
       refWrap.style.display='block';
-      refWrap.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px">'
-        +'<span style="font-size:calc(12.5px * var(--fs));font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em">Last session</span>'
-        +'<span style="font-size:calc(12.5px * var(--fs));color:var(--text2)">('+lastDate+'): <strong style="color:var(--text)">'+summaryKg+'</strong>'+(lastSession.notes?' · <em style="color:var(--text3)">'+lastSession.notes+'</em>':'')+'</span>'
-        +'</div>'+histSection;
-    } else if(histRows){
-      // No lastSession but have levelHistory
-      const firstEntry=data.levelHistory?(data.levelHistory.filter(function(e){return e.date!==today;})).slice(-1)[0]:null;
-      const histSection='<div id="ex-hist-detail" style="display:none;margin-top:8px;border-top:0.5px solid var(--border);padding-top:4px">'+histRows+'</div>'
-        +'<button onclick="var d=document.getElementById(\'ex-hist-detail\');var b=document.getElementById(\'ex-hist-btn\');if(d.style.display===\'none\'){d.style.display=\'block\';b.textContent=\'▲ Hide history\';}else{d.style.display=\'none\';b.textContent=\'▼ Show full history\';}" id="ex-hist-btn" style="font-size:calc(12.5px * var(--fs));color:var(--blue);background:none;border:none;cursor:pointer;margin-top:6px;padding:0">▼ Show full history</button>';
-      refWrap.style.display='block';
-      refWrap.innerHTML='<div style="display:flex;align-items:center;gap:6px">'
-        +'<span style="font-size:calc(12.5px * var(--fs));font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em">History</span>'
-        +'</div>'+histSection;
+      refWrap.innerHTML='<div style="font-size:calc(12.5px * var(--fs));font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em">Last session</div>'
+        +histRowHTML(hist[0])
+        +(rest.length?'<div id="ex-hist-detail" style="display:none">'+detail+'</div>'
+          +'<button onclick="toggleHistDetail()" id="ex-hist-btn" style="font-size:calc(12.5px * var(--fs));color:var(--blue);background:none;border:none;cursor:pointer;margin-top:6px;padding:0">▼ Show full history</button>':'');
     } else {
       refWrap.style.display='none';
     }
@@ -2251,13 +2242,14 @@ function openExercise(id,origin){
       '<div style="padding:4px 0">'
       +(function(){let n=0;return todaySession.series.map(function(s){
         if(!s.kg&&!s.reps)return'';
-        const lbl=s.test?'<span class="serie-tag" style="margin:0">T</span>':(++n);
-        return'<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:0.5px solid var(--border)'+(s.test?';opacity:.75':'')+'">'
+        const lbl=s.warmup?'<span class="serie-tag warm" style="margin:0">W</span>':s.test?'<span class="serie-tag" style="margin:0">T</span>':(++n);
+        return'<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:0.5px solid var(--border)'+(s.test||s.warmup?';opacity:.75':'')+'">'
           +'<div class="serie-num">'+lbl+'</div>'
           +'<div style="font-size:calc(14px * var(--fs));font-weight:500;color:var(--text)">'+(s.kg||'—')+' kg</div>'
           +'<div style="font-size:calc(13px * var(--fs));color:var(--text2)">×</div>'
           +'<div style="font-size:calc(14px * var(--fs));font-weight:500;color:var(--text)">'+(s.reps||'—')+' reps</div>'
           +(s.test?'<div style="font-size:calc(12.5px * var(--fs));color:var(--amber)">test · doesn’t count</div>':'')
+          +(s.warmup?'<div style="font-size:calc(12.5px * var(--fs));color:#185FA5">warm-up</div>':'')
           +'</div>';
       }).filter(Boolean).join('');})()
       +'<div id="serie-total" class="serie-total" style="margin-top:8px"></div>'
@@ -2294,6 +2286,27 @@ function autofillSeries(field,el){
   normals.slice(1).forEach(function(r){const i=r.querySelector(field==='kg'?'.kg-in':'.reps-in');if(i&&i.value==='')i.value=val;});
   saveCurrentExData();
 }
+// One line of the exercise history
+function histRowHTML(r){
+  const note=r.n?String(r.n).replace(/\n+/g,' / '):'';
+  return'<div style="padding:6px 0;border-bottom:0.5px solid var(--border)">'
+    +'<div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:4px">'
+    +'<span style="font-size:calc(12.5px * var(--fs));color:var(--text3);flex-shrink:0">'+r.d+'</span>'
+    +'<span style="font-size:calc(12.5px * var(--fs));color:var(--text2)">'+r.s+'</span></div>'
+    +(note?'<div style="font-size:calc(12.5px * var(--fs));color:var(--text3);margin-top:2px">📝 '+note+'</div>':'')+'</div>';
+}
+function toggleHistDetail(){
+  const d=document.getElementById('ex-hist-detail'),b=document.getElementById('ex-hist-btn');if(!d)return;
+  const open=d.style.display==='none';d.style.display=open?'block':'none';
+  b.textContent=open?'▲ Hide history':'▼ Show full history';
+  if(!open)resetHistMore(); // next time: back to the first 6
+}
+function resetHistMore(){const m=document.getElementById('ex-hist-more'),b=document.getElementById('ex-hist-more-btn');if(m)m.style.display='none';if(b)b.textContent='Load more ('+b.dataset.n+')';}
+function toggleHistMore(){
+  const m=document.getElementById('ex-hist-more'),b=document.getElementById('ex-hist-more-btn');if(!m)return;
+  const open=m.style.display==='none';m.style.display=open?'block':'none';
+  b.textContent=open?'Show less':'Load more ('+b.dataset.n+')';
+}
 function updateDoneBtn(done){
   const btn=document.getElementById('ex-done-btn');
   btn.classList.toggle('done-state',done);
@@ -2315,7 +2328,7 @@ function saveCurrentExData(){
     const kgEl=r.querySelector('.kg-in');
     const repsEl=r.querySelector('.reps-in');
     const o={kg:kgEl?kgEl.value:'',reps:repsEl?repsEl.value:''};
-    if(r.getAttribute('data-test')==='1')o.test=true;
+    if(r.getAttribute('data-test')==='1'){if(r.getAttribute('data-kind')==='w')o.warmup=true;else o.test=true;}
     return o;
   });
   const notasEl=document.getElementById('ex-notas');
@@ -2338,6 +2351,7 @@ function saveCurrentExData(){
 const WARMUP={
   upper:['2 min marching on the spot, swinging your arms','Shoulder rolls, 10 forward + 10 back (move the shoulders only, keep the neck still)','Arm circles, small to big, 10 each way','Wall push-ups, 10 reps','Wrist circles + open and close your hands, 10 each','1 light set of your first exercise (1 kg or no weight), 10 reps'],
   lower:['2 min marching on the spot','Hip circles, 10 each way','Good mornings with your hands on your hips, 10 reps','Slow squats to the chair, 8 reps','Calf raises, 10 reps'],
+  running:['Leg swings, holding on to a wall: 10 forward and back, 10 side to side, each leg','Knee lifts while walking, 10 each leg','Calf raises, 10 reps'],
   abs:['Cat-cow, 8 slow rounds','Pelvic tilts lying on your back, 10 reps','Lying on your back, knees bent: let them fall gently side to side, 8 each side','Bird dog, slow, 4 each side'],
   functional:['2 min marching on the spot, swinging your arms','Shoulder rolls + arm circles, 10 each','Cat-cow, 6 slow rounds','Hip circles, 10 each way','Slow squats to the chair, 8 reps','Wall push-ups, 8 reps']
 };
