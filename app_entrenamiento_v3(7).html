@@ -300,6 +300,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .serie-row.warm .serie-input{border-style:dashed;border-color:#7FB2E5;background:#EAF3FC;color:#185FA5}
 .serie-row.warm .serie-num{color:#185FA5;font-weight:700}
 .serie-tag.warm{background:#EAF3FC;color:#185FA5}
+/* v4.6 · Supersets */
+.ss-chip{display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:11px;font-weight:500;padding:2px 8px;border-radius:20px;background:var(--funcional-bg);color:var(--funcional-text);max-width:100%;white-space:normal;line-height:1.35}
+.ss-chip.done{background:var(--green-bg);color:var(--green)}
+.ss-chip.warn{background:var(--amber-bg);color:var(--amber)}
+.ss-box{margin:0 16px 10px;background:var(--card);border:0.5px solid var(--border);border-left:3px solid var(--funcional-dot);border-radius:var(--rs);padding:10px 12px;font-size:13px;line-height:1.45;color:var(--text)}
+.ss-box-title{font-size:11px;font-weight:600;color:var(--funcional-text);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.ss-partner{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ss-partner-name{font-weight:600}
+.ss-open{flex-shrink:0;font-size:12px;color:var(--blue);background:none;border:0.5px solid var(--border-med);border-radius:20px;padding:5px 10px;cursor:pointer;font-family:inherit}
+.ss-pauses{font-size:12px;color:var(--text2);margin-top:4px}
+.ss-warn{margin-top:8px;padding:7px 9px;border-radius:var(--rs);background:var(--amber-bg);color:var(--amber);font-size:12px}
+.ss-toggle{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding-top:9px;border-top:0.5px solid var(--border);font-size:13px;font-weight:500;cursor:pointer}
+.ss-toggle input{appearance:none;-webkit-appearance:none;flex-shrink:0;width:44px;height:26px;border-radius:13px;background:#d3d1c7;position:relative;cursor:pointer;transition:background .15s;margin:0}
+.ss-toggle input::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2);transition:left .15s}
+.ss-toggle input:checked{background:var(--green)}
+.ss-toggle input:checked::after{left:21px}
+.hist-ss{display:inline-block;font-size:11px;font-weight:500;padding:0 6px;border-radius:10px;background:var(--funcional-bg);color:var(--funcional-text);margin-right:6px}
+.backup-row{display:flex;gap:8px}
+.backup-row>*{flex:1;min-width:0}
 </style>
 </head>
 <body>
@@ -326,7 +345,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div><div class="racha-num" id="racha-num">0 semanas</div><div class="racha-text">de racha consecutiva</div></div>
   </div>
   <!-- Cambiar esta fecha en cada nueva versión -->
-  <div style="text-align:center;font-size:11px;color:var(--text3);padding:0 16px 18px">App actualizada el 11 nov 2026</div>
+  <div style="text-align:center;font-size:11px;color:var(--text3);padding:0 16px 18px">App actualizada el 15 nov 2026</div>
 </div>
 
 <!-- SESIONES -->
@@ -432,6 +451,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
   <div style="padding:0 16px 6px;font-size:13px;color:var(--text2);line-height:1.6" id="ex-technique"></div>
   <div id="ex-next-step" class="next-step" style="display:none"></div>
+  <div id="ex-ss-box" class="ss-box" style="display:none"></div>
   <div id="ex-last-ref" style="display:none;margin:0 16px 8px;background:var(--bg);border:0.5px solid var(--border);border-radius:var(--rs);padding:8px 12px"></div>
   <div class="card registro-card">
     <div class="registro-title">Registrar series<span id="ex-perdb" style="display:none;float:right;font-size:11px;font-weight:400;color:var(--text3)">kg por mancuerna</span></div>
@@ -482,6 +502,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <p class="rule-p">Series efectivas en las filas normales. Un intento con peso nuevo que no sale: <b>+ Serie de test</b> (no cuenta en el análisis). Toca el número de una serie: 1 vez = <b>calentamiento (C)</b>, 2 veces = <b>test (T)</b>, 3 veces = normal. Ni C ni T cuentan en el análisis.</p>
       <p class="rule-p muted">Dominada y fondos asistidos: anota los kg de asistencia; menos kg = progreso. En otro gimnasio, indícalo en notas: las máquinas no son comparables.</p>
     </div>
+    <div class="card rule-card">
+      <h3>Supersets</h3>
+      <p class="rule-p">Alternas dos ejercicios que no compiten entre sí (pecho y espalda, bíceps y tríceps, o tren superior y core). Cada músculo descansa lo mismo que con series sueltas, pero la sesión es más corta. No da más resultado por serie: ahorra tiempo.</p>
+      <p class="rule-p"><b>Pausas:</b> ejercicio A → 30–60 s → ejercicio B → 60–90 s → vuelta a A. Si pierdes más de 1–2 reps respecto a hacerlo suelto, alarga la segunda pausa.</p>
+      <p class="rule-p"><b>Peso nuevo = por separado.</b> El día que pruebes un peso nuevo (serie de test), haz ese ejercicio solo y con la pausa completa. Con la fatiga del otro ejercicio, el intento falla antes y no sabes si el peso era demasiado o si estabas cansada. La ficha te avisa cuando el próximo paso es subir de peso.</p>
+      <p class="rule-p muted">En la sesión, ⇄ indica la pareja sugerida. Si lo haces en superset, actívalo en la ficha («Hoy en superset», se marca en los dos ejercicios) y el histórico mostrará «⇄ con …». Mantén las mismas parejas varias semanas para poder comparar. Las parejas se cambian en ⚙️ Editar, en cada ejercicio.</p>
+    </div>
   </div>
 </div>
 
@@ -525,6 +552,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
   </div>
   <div id="editor-content" style="display:none">
+    <div class="section-label">Backup</div>
+    <div class="card" style="margin:0 16px 16px;padding:14px">
+      <div style="font-size:12px;color:#E65100;line-height:1.5;margin-bottom:12px">⚠️ Al eliminar la app de la pantalla de inicio, <strong>los datos se borran</strong>. Exporta un backup cada semana y guárdalo en iCloud. Importar sustituye todos los datos actuales.</div>
+      <div class="backup-row">
+        <button class="btn btn-primary" style="justify-content:center" onclick="exportData()">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Exportar
+        </button>
+        <label style="display:block">
+          <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+          <div class="btn" style="width:100%;justify-content:center;cursor:pointer">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Importar
+          </div>
+        </label>
+      </div>
+    </div>
     <div class="section-label">Mis actividades</div>
     <div style="padding:0 16px 8px;font-size:13px;color:var(--text2)">Añade tus propias actividades. Aparecen al añadir una actividad a un día.</div>
     <div class="card" style="margin:0 16px 16px;padding:14px">
@@ -536,7 +580,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <button class="btn btn-primary" style="width:100%;margin-top:10px" onclick="addCustomAct()">Añadir actividad</button>
     </div>
     <div class="section-label">Ejercicios</div>
-    <div style="padding:0 16px 8px;font-size:13px;color:var(--text2)">Toca un ejercicio para editarlo. ★ = esencial en esa sesión (sale en la sesión corta).</div>
+    <div style="padding:0 16px 8px;font-size:13px;color:var(--text2)">Toca un ejercicio para editarlo. ★ = esencial en esa sesión (sale en la sesión corta). ⇄ = pareja de superset en esa sesión.</div>
     <div id="editor-ex-list"></div>
     <div class="section-label" style="margin-top:8px">Añadir ejercicio</div>
     <div style="padding:0 16px 16px">
@@ -583,32 +627,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Añadir ejercicio
         </button>
-      </div>
-    </div>
-    <div class="section-label" style="margin-top:8px">Datos — backup y restauración</div>
-    <div style="margin:0 16px 10px;background:#fff3e0;border:0.5px solid rgba(230,81,0,.25);border-radius:var(--r);padding:12px 14px">
-      <div style="font-size:13px;font-weight:700;color:#E65100;margin-bottom:4px">⚠️ Importante antes de eliminar la app</div>
-      <div style="font-size:12px;color:#E65100;line-height:1.6">Al eliminar la app de la pantalla de inicio en iPhone, <strong>los datos se borran permanentemente</strong>. Exporta el backup JSON antes de hacerlo y guárdalo en iCloud.</div>
-    </div>
-    <div style="padding:0 16px 16px;display:flex;flex-direction:column;gap:10px">
-      <div class="card" style="padding:14px">
-        <div style="font-size:14px;font-weight:600;margin-bottom:4px">Exportar datos</div>
-        <div style="font-size:13px;color:var(--text2);margin-bottom:12px">Descarga un archivo JSON con todo tu historial, registros de series y progreso. Guárdalo en iCloud como copia de seguridad.</div>
-        <button class="btn btn-primary" style="width:100%" onclick="exportData()">
-          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Exportar backup
-        </button>
-      </div>
-      <div class="card" style="padding:14px">
-        <div style="font-size:14px;font-weight:600;margin-bottom:4px">Importar datos</div>
-        <div style="font-size:13px;color:var(--text2);margin-bottom:12px">Restaura un backup anterior. <strong>Atención:</strong> esto sobreescribe los datos actuales.</div>
-        <label style="display:block;width:100%">
-          <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
-          <div class="btn" style="width:100%;justify-content:center;cursor:pointer">
-            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            Importar backup
-          </div>
-        </label>
       </div>
     </div>
     <div class="section-label">Objetivos semanales</div>
@@ -666,6 +684,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <textarea class="notas-input" id="edit-ex-technique" rows="3"></textarea>
       </div>
       <div id="edit-ex-core"></div>
+      <div id="edit-ex-ss"></div>
       <button class="btn" id="edit-ex-remove" style="width:100%;justify-content:center" onclick="toggleRemoveExercise()"></button>
     </div>
     <div class="modal-actions">
@@ -1258,7 +1277,12 @@ function renderExerciseList(){
       const lastKgArr=lastDate&&data.sessions[lastDate]&&data.sessions[lastDate].series?
         effSeries(data.sessions[lastDate].series).map(function(s){return parseFloat(s.kg);}).filter(function(v){return!isNaN(v)&&v>0;}):[];
       const lastKg=lastKgArr.length?Math.min(...lastKgArr):null;
-      html+='<div class="ex-row" onclick="openExercise(\''+id+'\')"><div class="ex-check '+(done?'done':'')+'"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="ex-info"><div class="ex-name">'+ex.name+'</div><div class="ex-detail">'+ex.zone+' · '+ex.sets+(ex.rir&&ex.rir!=='—'?' · RIR '+ex.rir:'')+'</div></div><div class="ex-kg">'+(lastKg?lastKg+' kg':'—')+'</div><div class="ex-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div></div>';
+      // v4.6 · pareja de superset sugerida en esta sesión
+      const ssP=ssPartner(s.id,id),ssD=ssDoneWith(id);
+      let ssHtml='';
+      if(ssD)ssHtml='<div><span class="ss-chip done">⇄ Hecho en superset con '+esc(exName(ssD))+'</span></div>';
+      else if(ssP)ssHtml='<div><span class="ss-chip'+(ssNewWeight(id)?' warn':'')+'">⇄ Superset con '+esc(exName(ssP))+(ssNewWeight(id)?' · hoy peso nuevo: por separado':'')+'</span></div>';
+      html+='<div class="ex-row" onclick="openExercise(\''+id+'\')"><div class="ex-check '+(done?'done':'')+'"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="ex-info"><div class="ex-name">'+ex.name+'</div><div class="ex-detail">'+ex.zone+' · '+ex.sets+(ex.rir&&ex.rir!=='—'?' · RIR '+ex.rir:'')+'</div>'+ssHtml+'</div><div class="ex-kg">'+(lastKg?lastKg+' kg':'—')+'</div><div class="ex-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div></div>';
     });
     html+='</div>';
   });
@@ -1433,7 +1457,7 @@ function toggleSerieTest(btn){
   r.classList.toggle('warm',next==='w');r.classList.toggle('test',next==='t');
   // warm-up sets go to the top, before the first set that isn't a warm-up
   if(next==='w'){const first=Array.prototype.find.call(r.parentNode.querySelectorAll('.serie-row'),function(x){return x!==r&&x.getAttribute('data-kind')!=='w';});if(first&&first.compareDocumentPosition(r)&Node.DOCUMENT_POSITION_FOLLOWING)first.before(r);}
-  renumberSeries();saveCurrentExData();
+  renumberSeries();saveCurrentExData();renderSsBox(state.currentExercise);
   showToast(next==='w'?'Serie de calentamiento — no cuenta en el análisis':next==='t'?'Serie de test — no cuenta en el análisis':'Serie normal');
 }
 // Resumen compacto para que quepa en una línea: series seguidas con el mismo peso se agrupan
@@ -1667,7 +1691,7 @@ function openExercise(id,origin){
     allDates.forEach(function(d){
       const sess=data.sessions[d];if(!sess||!sess.series)return;
       const s=seriesSummary(sess.series);if(!s)return;
-      hist.push({d:d,s:s,n:sess.notes||''});
+      hist.push({d:d,s:s,n:sess.notes||'',ss:ssDoneWith(id,d)});
     });
     if(!hist.length&&data.levelHistory&&data.levelHistory.length){
       (data.levelHistory||[]).filter(function(e){return e.date!==today&&e.kg;}).slice().reverse()
@@ -1720,7 +1744,7 @@ function openExercise(id,origin){
   }
 
   updateDoneBtn(todayDone);
-  renderNextStep(id);updateSerieTotal();
+  renderNextStep(id);renderSsBox(id);updateSerieTotal();
   showScreen('exercise');
 }
 function setExEditMode(id){
@@ -1745,7 +1769,8 @@ function autofillSeries(field,el){
 function histRowHTML(r){
   const note=r.n?String(r.n).replace(/\n+/g,' / '):'';
   return'<div style="padding:6px 0;border-bottom:0.5px solid var(--border);font-size:12px;color:var(--text2);line-height:1.45;text-align:left">'
-    +'<span style="font-size:11px;color:var(--text3);margin-right:8px">'+r.d.slice(8,10)+'/'+r.d.slice(5,7)+'</span>'+r.s
+    +'<span style="font-size:11px;color:var(--text3);margin-right:8px">'+r.d.slice(8,10)+'/'+r.d.slice(5,7)+'</span>'
+    +(r.ss?'<span class="hist-ss">⇄ con '+esc(exName(r.ss))+'</span>':'')+r.s
     +(note?'<span style="color:var(--text3)"> · 📝 '+note+'</span>':'')+'</div>';
 }
 function toggleHistDetail(){
@@ -2289,7 +2314,7 @@ function renderEditorExList(){
     s.ids.forEach(id=>{
       const ex=allEx[id];if(!ex)return;
       shownIds[id]=true;
-      html+='<div class="editor-ex-row" onclick="openEditEx(\''+id+'\')">'+'<div class="ex-info"><div class="ex-name">'+ex.name+'</div><div class="ex-detail">'+(SESSIONS[s.sid].coreExercises.indexOf(id)>=0?'<span style="color:var(--amber)">★</span> ':'')+ex.sets+' · '+(ex.video?'<span style="color:var(--blue)">vídeo ✓</span>':'sin vídeo')+'</div></div><div class="ex-arrow"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke-width:1.5;fill:none;stroke:var(--text3);stroke-linecap:round;stroke-linejoin:round"><polyline points="9 18 15 12 9 6"/></svg></div></div>';
+      html+='<div class="editor-ex-row" onclick="openEditEx(\''+id+'\')">'+'<div class="ex-info"><div class="ex-name">'+ex.name+'</div><div class="ex-detail">'+(SESSIONS[s.sid].coreExercises.indexOf(id)>=0?'<span style="color:var(--amber)">★</span> ':'')+(ssPartner(s.sid,id)?'<span style="color:var(--funcional-text)">⇄ '+esc(exName(ssPartner(s.sid,id)))+'</span> · ':'')+ex.sets+' · '+(ex.video?'<span style="color:var(--blue)">vídeo ✓</span>':'sin vídeo')+'</div></div><div class="ex-arrow"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke-width:1.5;fill:none;stroke:var(--text3);stroke-linecap:round;stroke-linejoin:round"><polyline points="9 18 15 12 9 6"/></svg></div></div>';
     });
     html+='</div>';
   });
@@ -2317,6 +2342,74 @@ function setCore(sid,id,on){
   coreOverrides[sid]=list.slice();sv('entreno_core',coreOverrides);
 }
 function applyCoreOverrides(){Object.keys(coreOverrides).forEach(function(sid){if(SESSIONS[sid])SESSIONS[sid].coreExercises=coreOverrides[sid].slice();});}
+// ---- v4.6 · Supersets
+// Parejas sugeridas por sesión. Un ejercicio tiene como mucho una pareja por sesión.
+const SS_DEFAULTS={
+  sup:[['C5','A2'],['C3','A5'],['D3','B5'],['D2','B6']],
+  inf:[['I_C3','CG_PALLOF'],['I_A1','CG_CHOP']],
+  full:[['C1','A2'],['I_A2','C4']],
+  espalda:[['A2','CG_CHOP']],
+  pecho:[['C5','A5'],['D1','CG_PALLOF']],
+  casa_sup:[['CAL_PUSH','C_C1'],['CH_DIPS','C_A1']],
+  casa_abs:[['CAL_PUSH','C_E4']]
+};
+// Cambios hechos en Editar (lista completa por sesión) y registro de lo hecho en superset: {fecha:{id:pareja}}
+let ssOverrides=ld('entreno_supersets')||{};
+let ssLog=ld('entreno_ssLog')||{};
+function ssPairs(sid){return(ssOverrides[sid]||SS_DEFAULTS[sid]||[]).slice();}
+function exInSession(sid,id){return!!(SESSIONS[sid]&&!SESSIONS[sid].isDeleted&&EX[id]&&SESSIONS[sid].blocks.some(function(b){return b.exercises.indexOf(id)>=0;}));}
+function ssPartner(sid,id){
+  if(!sid||!exInSession(sid,id))return null;
+  const pr=ssPairs(sid).find(function(p){return p.indexOf(id)>=0;});
+  if(!pr)return null;
+  const other=pr[0]===id?pr[1]:pr[0];
+  return exInSession(sid,other)?other:null;
+}
+function setSsPartner(sid,id,partner){
+  if(!SESSIONS[sid])return;
+  if((ssPartner(sid,id)||'')===(partner||''))return; // sin cambios: no se guarda nada
+  let pairs=ssPairs(sid).filter(function(p){return p.indexOf(id)<0&&(!partner||p.indexOf(partner)<0);});
+  if(partner)pairs.push([id,partner]);
+  ssOverrides[sid]=pairs;sv('entreno_supersets',ssOverrides);
+}
+function ssDoneWith(id,date){const d=ssLog[date||localDateISO()];return d&&d[id]?d[id]:null;}
+function exName(id){return EX[id]?EX[id].name:id;}
+// Próximo paso = subir de peso, o hay una serie de test hoy → mejor por separado
+function ssNewWeight(id){
+  const r=computeNextStep(id);
+  if(r&&r.cls==='up')return true;
+  const t=((state.exData[id]||{}).sessions||{})[localDateISO()];
+  return!!(t&&(t.series||[]).some(function(x){return x&&x.test&&(x.kg||x.reps);}));
+}
+function currentSsSid(){return state.exerciseOrigin==='session'&&state.currentSession?state.currentSession.id:null;}
+function renderSsBox(id){
+  const box=document.getElementById('ex-ss-box');if(!box)return;
+  const done=ssDoneWith(id);
+  const partner=ssPartner(currentSsSid(),id)||done;
+  if(!partner){box.style.display='none';box.innerHTML='';return;}
+  const pn=esc(exName(partner));
+  box.innerHTML='<div class="ss-box-title">⇄ Superset</div>'
+    +'<div class="ss-partner"><span>Con <span class="ss-partner-name">'+pn+'</span></span>'
+    +'<button class="ss-open" onclick="openExercise(\''+partner+'\',state.exerciseOrigin)">Abrir</button></div>'
+    +'<div class="ss-pauses">Este → 30–60 s → '+pn+' → 60–90 s → repetir.</div>'
+    +(ssNewWeight(id)?'<div class="ss-warn">Hoy toca peso nuevo: haz este ejercicio por separado, con la pausa completa.</div>':'')
+    +'<label class="ss-toggle"><span>Hoy en superset</span><input type="checkbox" '+(done?'checked':'')+' onchange="toggleSsDone(this.checked)"></label>';
+  box.style.display='block';
+}
+function toggleSsDone(on){
+  const id=state.currentExercise;if(!id)return;
+  const today=localDateISO();
+  const partner=ssDoneWith(id)||ssPartner(currentSsSid(),id);if(!partner)return;
+  if(!ssLog[today])ssLog[today]={};
+  const d=ssLog[today];
+  // Se marca (o desmarca) en los dos ejercicios de la pareja
+  [id,partner].forEach(function(x){const old=d[x];if(old&&d[old]===x)delete d[old];delete d[x];});
+  if(on){d[id]=partner;d[partner]=id;}
+  if(!Object.keys(d).length)delete ssLog[today];
+  sv('entreno_ssLog',ssLog);
+  renderSsBox(id);
+  showToast(on?'Superset con '+exName(partner)+' ✓':'Superset desactivado');
+}
 // ---- Objetivos y actividades propias
 const CAT_OPTS=[['movilidad','Movilidad'],['fuerza','Fuerza'],['cardio','Cardio'],['funcional','Funcional'],['fisio','Fisio']];
 function toggleGoalsEdit(force){
@@ -2406,6 +2499,17 @@ function openEditEx(id){
   const inSessions=realSessionIds().filter(function(sid){return SESSIONS[sid].blocks.some(function(b){return b.exercises.indexOf(id)>=0;});});
   document.getElementById('edit-ex-core').innerHTML=inSessions.length?'<div class="serie-input-label" style="margin-bottom:6px">Esencial (sale en la sesión corta)</div>'
     +inSessions.map(function(sid){return'<label class="check-row" style="margin-bottom:6px"><input type="checkbox" class="core-chk" data-sid="'+sid+'"'+(SESSIONS[sid].coreExercises.indexOf(id)>=0?' checked':'')+'>'+SESSIONS[sid].title+'</label>';}).join(''):'';
+  // v4.6 · Pareja de superset por sesión
+  document.getElementById('edit-ex-ss').innerHTML=inSessions.length?'<div class="serie-input-label" style="margin-bottom:6px">Superset con</div>'
+    +inSessions.map(function(sid){
+      const cur=ssPartner(sid,id)||'';const opts=[];
+      SESSIONS[sid].blocks.forEach(function(b){b.exercises.forEach(function(e){if(e!==id&&EX[e]&&opts.indexOf(e)<0)opts.push(e);});});
+      return'<div style="margin-bottom:8px"><div style="font-size:12px;color:var(--text2);margin-bottom:3px">'+SESSIONS[sid].title+'</div>'
+        +'<select class="ss-sel" data-sid="'+sid+'" style="width:100%;padding:8px 10px;border:0.5px solid var(--border-med);border-radius:var(--rs);font-size:14px;font-family:inherit;color:var(--text);background:var(--card)">'
+        +'<option value="">— Sin superset —</option>'
+        +opts.map(function(e){const other=ssPartner(sid,e);return'<option value="'+e+'"'+(e===cur?' selected':'')+'>'+esc(exName(e))+(other&&other!==id?' (ahora con '+esc(exName(other))+')':'')+'</option>';}).join('')
+        +'</select></div>';
+    }).join('')+'<div style="font-size:11px;color:var(--text3);margin-top:-2px">Si eliges un ejercicio que ya tiene pareja, esa pareja se deshace.</div>':'';
   const rb=document.getElementById('edit-ex-remove');
   if(removedEx[id]){rb.textContent='↩ Restaurar a su sesión';rb.style.color='var(--green)';rb.style.borderColor='var(--green)';}
   else{rb.textContent='Quitar de las sesiones';rb.style.color='var(--red)';rb.style.borderColor='var(--red)';}
@@ -2457,6 +2561,7 @@ function saveEditEx(){
     EX[id]=c;
   }
   document.querySelectorAll('#edit-ex-core .core-chk').forEach(function(chk){setCore(chk.getAttribute('data-sid'),id,chk.checked);});
+  document.querySelectorAll('#edit-ex-ss .ss-sel').forEach(function(sel){setSsPartner(sel.getAttribute('data-sid'),id,sel.value||null);});
   sv('customEx',customEx);
   closeEditEx();renderEditorExList();
   showToast('Ejercicio guardado');
@@ -2531,7 +2636,9 @@ function exportData(){
     goals:goals,
     customActs:customActs,
     coreOverrides:coreOverrides,
-    removedEx:removedEx
+    removedEx:removedEx,
+    supersets:ssOverrides,
+    supersetLog:ssLog
   };
   const json=JSON.stringify(data,null,2);
   const blob=new Blob([json],{type:'application/json'});
@@ -2565,6 +2672,9 @@ function importData(event){
       if(data.coreOverrides){coreOverrides=data.coreOverrides;sv('entreno_core',coreOverrides);applyCoreOverrides();}
       Object.keys(removedEx).forEach(function(id){moveBack(id);});
       removedEx=data.removedEx||{};sv('entreno_removedEx',removedEx);
+      // v4.6 · supersets (los backups antiguos no los tienen: parejas por defecto y registro vacío)
+      ssOverrides=data.supersets||{};sv('entreno_supersets',ssOverrides);
+      ssLog=data.supersetLog||{};sv('entreno_ssLog',ssLog);
       // Restore svg function for imported custom exercises (lost during JSON serialization)
       Object.keys(customEx).forEach(function(id){
         if(!customEx[id].svg){
@@ -2834,7 +2944,7 @@ document.addEventListener('visibilitychange',function(){
     try{
       localStorage.setItem('autobackup_entreno',JSON.stringify({
         version:1,savedAt:new Date().toISOString(),
-        weekData:state.weekData,exData:state.exData,customEx:customEx,goals:goals,customActs:customActs,coreOverrides:coreOverrides,removedEx:removedEx
+        weekData:state.weekData,exData:state.exData,customEx:customEx,goals:goals,customActs:customActs,coreOverrides:coreOverrides,removedEx:removedEx,supersets:ssOverrides,supersetLog:ssLog
       }));
     }catch(e){}
   }
